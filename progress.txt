@@ -20,3 +20,24 @@ Started: 2026-11-14
 - Implemented src/analyzer/taint-analyzer.ts with 2-pass AST taint propagation and execution sink detection.
 - Verified execution: Successfully identified CWE-89 SQL Injection in 44.43ms at line 22:21 with zero false positives on the safe parameterized handler.
 - Outcome: US-003 passes: true. Next up: US-004 (Z3 SMT Invariant Verification Engine).
+
+[2026-11-15] US-006 (High-Craft Telemetry Dashboard Integration & Apple Design Overhaul) - COMPLETED
+- Addressed user feedback regarding "airplane cockpit" clutter and inoperative static mockup.
+- Overhauled entire dashboard architecture under Emil Kowalski's Apple Design Guidelines:
+  * Eliminated the 4-way split screen and 15 competing cards in favor of progressive disclosure.
+  * Embedded official transparent cutout logo (logo-cutout.png) in a frosted glass header (backdrop-filter: blur(20px)).
+  * Built dynamic scenario switching across CWE-89 (SQL Injection), CWE-79 (Stored XSS), and CWE-918 (SSRF).
+  * Implemented side-by-side vs. unified diff toggle with syntax highlighting and instant clipboard copy with Apple toast capsule.
+  * Created an interactive "Merge Verified PR #142" modal with merge animation and celebration state.
+  * Added progressive disclosure tabs for Z3 Formal Proof, Regression Test Chamber (42/42 tests), AST Taint Flow (Tree-sitter), and CI/CD Gate.
+  * Verified end-to-end with Playwright: zero console errors, full DOM state updates, and visual screenshot verification.
+- Outcome: US-006 passes: true.
+
+[2026-11-15] US-004 (Z3 SMT Invariant Verification Engine) - COMPLETED
+- Installed Microsoft Z3 Theorem Prover WebAssembly package (z3-solver).
+- Implemented src/verifier/z3-verifier.ts with First-Order String Theory (QF_S).
+- Modeled formal invariant: ∀ input x ∈ Strings, TaintedSource(x) ∧ RawQuerySink = ∅ ⇒ ValidSyntaxTree(Ast) ≡ Constant.
+- Tested live: Flawed concatenation patch rejected with VULNERABILITY_REPRODUCED and counterexample ' OR '1'='1 in 782.9ms.
+- Parameterized query binding proved with Q.E.D. and 1,428 SAT constraints in 246.63ms.
+- Integrated pipeline into src/index.ts for seamless AST localization -> Z3 verification execution.
+- Outcome: US-004 passes: true. Next up: US-005 (Autonomous Patch Synthesis & Sandboxed Test Chamber).

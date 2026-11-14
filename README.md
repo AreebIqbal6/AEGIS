@@ -62,9 +62,13 @@ flowchart LR
 ---
 
 ## 🖥️ Live Telemetry Dashboard
-AEGIS features a mission-critical, dark-mode cockpit built with **Tailwind CSS, Geist, and JetBrains Mono**, compliant with **Apple HIG** and **Anti-Slop Quality Standards**.
+AEGIS features a calm, progressive-disclosure dashboard designed according to **Apple Design Guidelines** and **Emil Kowalski's fluid physics standards**. It provides interactive scenario switching across SQL Injection (CWE-89), Stored XSS (CWE-79), and SSRF (CWE-918) with real-time Z3 invariant re-verification, side-by-side AST syntax diffs, and 1-click verified PR merging.
 
-* **Preview Dashboard:** Open [`dashboard/index.html`](./dashboard/index.html) in any modern browser.
+<div align="center">
+  <img src="./dashboard/preview.png" alt="AEGIS Apple Design Telemetry Dashboard" style="border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);" width="100%" />
+</div>
+
+* **Interactive Single-Page App:** Open [`dashboard/index.html`](./dashboard/index.html) in your browser.
 
 ---
 

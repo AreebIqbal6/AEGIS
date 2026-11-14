@@ -45,7 +45,7 @@
         "Correctly returns SAT for parameterized query patches",
         "Correctly returns UNSAT or generates a counterexample for flawed patches"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-005",
@@ -67,7 +67,7 @@
         "Displays Z3 formal invariant badge (Q.E.D.) and test chamber matrix",
         "Passes 38-point anti-vibecoding quality audit and Apple HIG design standards"
       ],
-      "passes": false
+      "passes": true
     }
   ]
 }

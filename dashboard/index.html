@@ -1,694 +1,1027 @@
 <!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEGIS — Autonomous Vulnerability Repair & Formal Invariant Verification</title>
+  <link rel="icon" type="image/png" href="logo-cutout.png">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-<html class="dark" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>AEGIS — Autonomous Vulnerability Repair &amp; Formal Invariant Engine</title>
-<!-- Material Symbols Outlined -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<!-- Fonts: Geist and JetBrains Mono -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<!-- Tailwind CSS CDN -->
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<!-- Tailwind Configuration verbatim -->
-<script id="tailwind-config">
+  <script>
     tailwind.config = {
-      darkMode: "class",
+      darkMode: 'class',
       theme: {
         extend: {
-          "colors": {
-            "on-primary-fixed": "#002113",
-            "on-secondary-fixed-variant": "#930013",
-            "inverse-surface": "#e3e1ec",
-            "on-primary-container": "#00422b",
-            "on-error-container": "#ffdad6",
-            "on-secondary": "#68000a",
-            "surface-variant": "#33343c",
-            "inverse-primary": "#006c49",
-            "on-tertiary-fixed": "#001f26",
-            "surface-container-lowest": "#0d0e15",
-            "surface-dim": "#12131a",
-            "on-surface": "#e3e1ec",
-            "on-tertiary": "#003640",
-            "primary-fixed-dim": "#4edea3",
-            "error": "#ffb4ab",
-            "on-background": "#e3e1ec",
-            "primary-container": "#10b981",
-            "surface-container-low": "#1a1b22",
-            "on-tertiary-fixed-variant": "#004e5c",
-            "error-container": "#93000a",
-            "on-primary-fixed-variant": "#005236",
-            "surface-tint": "#4edea3",
-            "surface-container-highest": "#33343c",
-            "on-tertiary-container": "#003f4b",
-            "surface-container-high": "#292931",
-            "secondary-fixed-dim": "#ffb3ad",
-            "outline-variant": "#3c4a42",
-            "on-primary": "#003824",
-            "surface-bright": "#383941",
-            "outline": "#86948a",
-            "primary-fixed": "#6ffbbe",
-            "surface": "#12131a",
-            "on-secondary-container": "#ffaea8",
-            "on-error": "#690005",
-            "on-secondary-fixed": "#410004",
-            "surface-container": "#1e1f26",
-            "background": "#12131a",
-            "tertiary-fixed-dim": "#4cd7f6",
-            "secondary": "#ffb3ad",
-            "inverse-on-surface": "#2f3038",
-            "tertiary-fixed": "#acedff",
-            "secondary-fixed": "#ffdad7",
-            "tertiary-container": "#00b2d0",
-            "tertiary": "#4cd7f6",
-            "primary": "#4edea3",
-            "secondary-container": "#a40217",
-            "on-surface-variant": "#bbcabf"
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', 'Inter', 'SF Pro Text', 'Segoe UI', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'SF Mono', 'Menlo', 'monospace'],
           },
-          "borderRadius": {
-            "DEFAULT": "0.125rem",
-            "lg": "0.25rem",
-            "xl": "0.5rem",
-            "full": "0.75rem"
+          colors: {
+            apple: {
+              bg: '#0A0D14',
+              surface: '#111622',
+              card: '#161C2B',
+              border: 'rgba(255, 255, 255, 0.08)',
+              hover: 'rgba(255, 255, 255, 0.04)',
+              accent: '#06B6D4',
+              emerald: '#10B981',
+              rose: '#F43F5E',
+              amber: '#F59E0B',
+              text: '#F3F4F6',
+              muted: '#9CA3AF',
+            }
           },
-          "spacing": {
-            "space-xl": "1.5rem",
-            "space-lg": "1rem",
-            "space-md": "0.75rem",
-            "space-sm": "0.5rem",
-            "margin-desktop": "1.5rem",
-            "gutter": "0.75rem",
-            "gutter-desktop": "1rem",
-            "margin": "1rem",
-            "space-xs": "0.25rem"
-          },
-          "fontFamily": {
-            "body-sm": ["Geist"],
-            "code-md": ["JetBrains Mono"],
-            "headline-md": ["Geist"],
-            "headline-lg": ["Geist"],
-            "display-lg-mobile": ["Geist"],
-            "label-sm": ["JetBrains Mono"],
-            "headline-sm": ["Geist"],
-            "code-lg": ["JetBrains Mono"],
-            "label-md": ["JetBrains Mono"],
-            "display-lg": ["Geist"],
-            "code-sm": ["JetBrains Mono"],
-            "body-md": ["Geist"],
-            "body-lg": ["Geist"]
-          },
-          "fontSize": {
-            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.005em", "fontWeight": "400" }],
-            "code-md": ["12px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" }],
-            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
-            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
-            "display-lg-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
-            "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
-            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
-            "code-lg": ["14px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
-            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
-            "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "600" }],
-            "code-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }],
-            "body-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" }],
-            "body-lg": ["15px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "400" }]
+          boxShadow: {
+            'apple-sm': '0 1px 2px 0 rgba(0, 0, 0, 0.25)',
+            'apple-md': '0 4px 16px -2px rgba(0, 0, 0, 0.35)',
+            'apple-lg': '0 12px 32px -4px rgba(0, 0, 0, 0.45)',
+            'glow-cyan': '0 0 20px -3px rgba(6, 182, 212, 0.25)',
+            'glow-emerald': '0 0 20px -3px rgba(16, 185, 129, 0.25)',
           }
-        },
-      },
+        }
+      }
     }
   </script>
-<style>
-    .material-symbols-outlined {
-      font-size: 16px;
-      line-height: 1;
-      display: inline-block;
-      vertical-align: middle;
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    }
-    .material-symbols-outlined[data-weight="fill"] {
-      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+
+  <style>
+    /* Emil Kowalski Apple Motion Curves */
+    * {
+      transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
     }
     
-    /* Custom scrollbar for dense code areas */
+    /* Subtle custom scrollbars */
     ::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
+      width: 6px;
+      height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #0d0e15;
+      background: rgba(10, 13, 20, 0.5);
     }
     ::-webkit-scrollbar-thumb {
-      background: #27272a;
-      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #3f3f46;
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Glassmorphic material */
+    .glass-material {
+      background: rgba(17, 22, 34, 0.75);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Button tap micro-interaction */
+    .tap-effect:active {
+      transform: scale(0.975);
+    }
+
+    /* Keyframe pulse */
+    @keyframes subtle-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(0.98); }
+    }
+    .pulse-subtle {
+      animation: subtle-pulse 2s infinite ease-in-out;
     }
   </style>
 </head>
-<body class="bg-surface-container-lowest text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col overflow-x-hidden">
-<!-- TOP APP BAR (Shared Component Anchor) -->
-<header class="w-full h-12 flex justify-between items-center px-gutter-desktop max-w-full bg-surface-container-lowest border-b border-surface-variant z-50 sticky top-0">
-<!-- Left: Brand + Breadcrumbs -->
-<div class="flex items-center gap-space-md">
-<!-- AEGIS Official Brand Logo -->
-<div class="flex items-center">
-  <img src="logo-cutout.png" alt="AEGIS Logo" class="h-7 w-auto object-contain drop-shadow" />
-</div>
-<div class="h-4 w-[1px] bg-surface-variant"></div>
-<!-- Navigation Breadcrumb Links from JSON -->
-<nav class="flex items-center gap-space-xs font-code-sm text-code-sm">
-<span class="text-on-surface-variant hover:text-on-surface cursor-pointer">acme-corp</span>
-<span class="text-outline-variant">/</span>
-<span class="text-on-surface-variant hover:text-on-surface cursor-pointer">payment-service</span>
-<span class="text-outline-variant">/</span>
-<div class="flex items-center gap-1.5 text-primary border-b-2 border-primary pb-0.5">
-<span class="material-symbols-outlined text-[13px]">commit</span>
-<span>PR #142</span>
-<span class="px-1.5 py-0.2 bg-surface-container text-on-surface-variant border border-surface-variant rounded text-[10px] tracking-tight">hotfix/auth-query</span>
-</div>
-</nav>
-</div>
-<!-- Center: Operational Radar Status -->
-<div class="hidden md:flex items-center gap-2 px-space-md py-1 bg-surface-container-low border border-outline-variant rounded-full">
-<span class="relative flex h-2 w-2">
-<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-</span>
-<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-medium">VULNERABILITY REPAIRED &amp; VERIFIED</span>
-</div>
-<!-- Right: Trailing Actions, Metric, Repo Selector, Icons -->
-<div class="flex items-center gap-space-md">
-<!-- Metric badge -->
-<div class="hidden lg:flex items-center gap-1.5 px-space-sm py-0.5 bg-surface-container border border-surface-variant rounded text-on-surface-variant font-code-sm text-code-sm">
-<span class="material-symbols-outlined text-[14px] text-tertiary">timer</span>
-<span>Total Repair Time: <strong class="text-primary font-medium">1.24s</strong></span>
-</div>
-<!-- Trailing Secondary Action: Repo Selector -->
-<div class="hidden sm:flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-low border border-surface-variant hover:border-outline transition-colors rounded cursor-pointer font-code-sm text-code-sm text-on-surface">
-<span class="material-symbols-outlined text-outline">account_tree</span>
-<span>Repo Selector</span>
-<span class="material-symbols-outlined text-outline-variant text-[14px]">expand_more</span>
-</div>
-<!-- Formal Verifier Engine version pill -->
-<span class="hidden xl:inline-block px-1.5 py-0.5 font-label-sm text-label-sm text-outline border border-surface-variant bg-surface-container-lowest rounded">v4.8.2-pure-smt</span>
-<!-- Trailing Primary Action button from JSON -->
-<button class="flex items-center gap-1.5 px-space-md py-1 bg-primary text-on-primary font-label-md text-label-md rounded font-semibold hover:bg-primary-fixed-dim transition-all active:scale-[0.99]">
-<span class="material-symbols-outlined text-[15px]" data-weight="fill">verified</span>
-<span>Verify Invariants</span>
-</button>
-<!-- Trailing Icon Actions: terminal, shield_with_heart, settings -->
-<div class="flex items-center gap-space-xs text-on-surface-variant border-l border-surface-variant pl-space-sm">
-<button class="p-1 hover:bg-surface-container-high rounded text-on-surface-variant hover:text-on-surface transition-colors" title="Terminal">
-<span class="material-symbols-outlined">terminal</span>
-</button>
-<button class="p-1 hover:bg-surface-container-high rounded text-on-surface-variant hover:text-on-surface transition-colors" title="Shield Status">
-<span class="material-symbols-outlined">shield_with_heart</span>
-</button>
-<button class="p-1 hover:bg-surface-container-high rounded text-on-surface-variant hover:text-on-surface transition-colors" title="Settings">
-<span class="material-symbols-outlined">settings</span>
-</button>
-</div>
-<!-- Avatar Profile -->
-<div class="w-6 h-6 rounded-full bg-surface-container border border-surface-variant flex items-center justify-center font-code-sm text-[10px] text-primary" title="Security Architect profile avatar">
-        SA
+<body class="bg-apple-bg text-apple-text font-sans min-h-screen antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
+
+  <!-- TOP TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 -translate-y-3">
+    <div class="glass-material px-4 py-2.5 rounded-full shadow-apple-lg flex items-center space-x-2.5 text-sm font-medium border border-white/10">
+      <i id="toast-icon" data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+      <span id="toast-message" class="text-white">Git patch copied to clipboard</span>
+    </div>
+  </div>
+
+  <!-- NAVIGATION HEADER (FROSTED GLASS) -->
+  <header class="sticky top-0 z-40 glass-material border-b border-white/[0.08] px-4 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      
+      <!-- LOGO & BRAND IDENTITY -->
+      <div class="flex items-center space-x-4">
+        <a href="#" class="flex items-center space-x-3 group tap-effect">
+          <img src="logo-cutout.png" alt="AEGIS Logo" class="h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-105" onerror="this.style.display='none'; document.getElementById('logo-fallback').classList.remove('hidden');" />
+          <div id="logo-fallback" class="hidden flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold">
+              <i data-lucide="shield-check" class="w-5 h-5"></i>
+            </div>
+            <span class="font-bold text-lg tracking-wider text-white">AEGIS</span>
+          </div>
+        </a>
+        <div class="hidden sm:flex items-center space-x-2 border-l border-white/10 pl-3">
+          <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-mono font-medium">v1.0-pure-smt</span>
+          <span class="text-xs text-apple-muted hidden md:inline">Formal Verification Engine</span>
+        </div>
       </div>
-</div>
-</header>
-<!-- BODY CONTENT WRAPPER -->
-<div class="flex-1 flex w-full relative">
-<!-- SIDE NAV BAR (Shared Component Anchor - Desktop Collapsed/Docked) -->
-<aside class="hidden xl:flex fixed top-12 left-0 h-[calc(100vh-3rem-2.75rem)] w-60 flex-col justify-between p-space-sm z-40 bg-surface-container-low border-r border-surface-variant">
-<!-- Enclave Header -->
-<div>
-<div class="flex items-center gap-space-sm px-space-md py-space-sm border-b border-surface-variant mb-space-sm">
-<div class="w-7 h-7 rounded bg-primary-container/20 border border-primary flex items-center justify-center text-primary">
-<span class="material-symbols-outlined text-[16px]">memory</span>
-</div>
-<div>
-<div class="text-code-md font-code-md font-semibold text-primary">AEGIS Formal Kernel</div>
-<div class="font-label-sm text-label-sm text-outline">v4.8.2-pure-smt</div>
-</div>
-</div>
-<!-- Side Navigation Items (Surgery Editor is Active) -->
-<nav class="space-y-1">
-<!-- Item 1: Surgery Editor (ACTIVE) -->
-<a class="flex items-center gap-space-sm px-space-md py-space-xs text-primary bg-surface-container border-l-2 border-primary font-code-sm transition-all" href="#">
-<span class="material-symbols-outlined text-[18px]">code_blocks</span>
-<span>Surgery Editor</span>
-</a>
-<!-- Item 2: Invariant Proofs -->
-<a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant font-code-sm hover:text-on-surface hover:bg-surface-container-high transition-colors" href="#">
-<span class="material-symbols-outlined text-[18px]">verified</span>
-<span>Invariant Proofs</span>
-</a>
-<!-- Item 3: AST Telemetry -->
-<a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant font-code-sm hover:text-on-surface hover:bg-surface-container-high transition-colors" href="#">
-<span class="material-symbols-outlined text-[18px]">account_tree</span>
-<span>AST Telemetry</span>
-</a>
-<!-- Item 4: Test Chamber -->
-<a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant font-code-sm hover:text-on-surface hover:bg-surface-container-high transition-colors" href="#">
-<span class="material-symbols-outlined text-[18px]">fact_check</span>
-<span>Test Chamber</span>
-</a>
-<!-- Item 5: Audit Trail -->
-<a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant font-code-sm hover:text-on-surface hover:bg-surface-container-high transition-colors" href="#">
-<span class="material-symbols-outlined text-[18px]">history_edu</span>
-<span>Audit Trail</span>
-</a>
-</nav>
-<!-- CTA from JSON -->
-<div class="mt-space-md px-space-xs">
-<button class="w-full flex items-center justify-center gap-1.5 py-1.5 px-space-sm bg-surface-container border border-surface-variant hover:border-primary text-primary font-code-sm text-code-sm rounded transition-all">
-<span class="material-symbols-outlined text-[14px]">add_circle</span>
-<span>New Proof Target</span>
-</button>
-</div>
-</div>
-<!-- Footer Tabs from JSON -->
-<div class="border-t border-surface-variant pt-space-xs space-y-1">
-<a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant font-code-sm hover:text-on-surface hover:bg-surface-container-high transition-colors" href="#">
-<span class="material-symbols-outlined text-[16px] text-tertiary">memory</span>
-<span>Z3 Daemon</span>
-<span class="ml-auto w-1.5 h-1.5 rounded-full bg-primary"></span>
-</a>
-<a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant font-code-sm hover:text-on-surface hover:bg-surface-container-high transition-colors" href="#">
-<span class="material-symbols-outlined text-[16px]">menu_book</span>
-<span>Security Docs</span>
-</a>
-</div>
-</aside>
-<!-- MAIN WORKSPACE (Offset for SideNavBar on XL screens) -->
-<main class="flex-1 xl:ml-60 pb-16 px-gutter lg:px-gutter-desktop py-space-md overflow-y-auto">
-<!-- Top Alert Header: Critical Vulnerability Notification Banner -->
-<div class="mb-space-md border border-error-container/80 bg-surface-container-lowest relative overflow-hidden rounded">
-<div class="absolute inset-0 bg-gradient-to-r from-secondary-container/20 via-surface-container-lowest to-transparent pointer-events-none"></div>
-<div class="relative p-space-md flex flex-wrap items-center justify-between gap-space-md">
-<div class="flex items-start sm:items-center gap-space-md">
-<div class="p-2 rounded bg-error-container/30 border border-secondary text-secondary flex items-center justify-center mt-0.5 sm:mt-0 shadow-[0_0_16px_-2px_rgba(239,68,68,0.25)]">
-<span class="material-symbols-outlined text-[20px]" data-weight="fill">gpp_maybe</span>
-</div>
-<div>
-<div class="flex flex-wrap items-center gap-space-sm">
-<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">CWE-89: SQL Injection Detected in <span class="font-code-md text-secondary font-mono">controllers/auth.ts:42</span></span>
-<span class="px-2 py-0.5 bg-secondary-container/60 border border-secondary text-secondary font-label-sm text-label-sm uppercase tracking-wider rounded font-bold">
-                  CRITICAL SEVERITY
-                </span>
-<span class="px-2 py-0.5 bg-surface-container border border-surface-variant text-on-surface-variant font-code-sm text-code-sm rounded">
-                  CVSS 9.8
-                </span>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
-                Vulnerable query string formation permits unauthorized SQL token injection bypassing identity provider authentication invariants.
-              </p>
-</div>
-</div>
-<div class="flex items-center gap-space-sm font-code-sm text-code-sm">
-<span class="text-on-surface-variant">Autonomous Action:</span>
-<div class="flex items-center gap-1.5 px-2.5 py-1 bg-surface-container border border-primary/40 rounded text-primary">
-<span class="material-symbols-outlined text-[14px]">auto_fix_high</span>
-<span>Hotfix Synthesized &amp; Proved</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Split Layout 60 / 40 -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md items-start">
-<!-- LEFT COLUMN: Code Diff & AST Surgery Inspector (60% ~ 7 cols) -->
-<section class="lg:col-span-7 flex flex-col gap-space-md">
-<div class="bg-surface-container-low border border-surface-variant rounded flex flex-col overflow-hidden">
-<!-- Diff Navigation Tabs -->
-<div class="flex items-center justify-between border-b border-surface-variant px-space-md bg-surface-container-lowest">
-<div class="flex items-center gap-space-md font-code-sm text-code-sm">
-<button class="py-2.5 border-b-2 border-primary text-primary font-medium flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[15px]">difference</span>
-<span>Side-by-Side Diff</span>
-</button>
-<button class="py-2.5 text-on-surface-variant hover:text-on-surface flex items-center gap-1.5 transition-colors">
-<span class="material-symbols-outlined text-[15px] text-tertiary">hub</span>
-<span>AST Taint Path (Graph View)</span>
-</button>
-<button class="py-2.5 text-on-surface-variant hover:text-on-surface flex items-center gap-1.5 transition-colors">
-<span class="material-symbols-outlined text-[15px]">format_align_left</span>
-<span>Unified Diff</span>
-</button>
-</div>
-<!-- Quick action triggers -->
-<div class="flex items-center gap-space-xs font-code-sm text-code-sm">
-<button class="p-1 px-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded flex items-center gap-1 transition-colors" title="Copy Patch">
-<span class="material-symbols-outlined text-[14px]">content_copy</span>
-<span class="hidden sm:inline">Copy Patch</span>
-</button>
-<button class="p-1 px-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded flex items-center gap-1 transition-colors">
-<span class="material-symbols-outlined text-[14px] text-tertiary">account_tree</span>
-<span class="hidden sm:inline">View AST Diff</span>
-</button>
-<button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded" title="Expand Full File">
-<span class="material-symbols-outlined text-[16px]">fullscreen</span>
-</button>
-</div>
-</div>
-<!-- Side-by-Side Code Diff Panel -->
-<div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-surface-variant bg-surface-container-lowest font-code-sm text-code-sm">
-<!-- Left Pane: BEFORE • VULNERABLE -->
-<div class="flex flex-col">
-<div class="px-space-md py-1.5 bg-surface-container-lowest border-b border-surface-variant flex items-center justify-between">
-<div class="flex items-center gap-2">
-<span class="h-2 w-2 rounded-full bg-secondary"></span>
-<span class="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">BEFORE • VULNERABLE</span>
-</div>
-<span class="text-outline text-label-sm font-label-sm">controllers/auth.ts</span>
-</div>
-<div class="p-space-xs py-space-sm font-mono text-[12px] leading-[22px] overflow-x-auto text-on-surface select-text">
-<!-- Line 39 -->
-<div class="flex items-start">
-<span class="w-8 text-right pr-3 select-none text-outline-variant font-code-sm">39</span>
-<span class="text-outline">// Handler for authentication token dispatch</span>
-</div>
-<!-- Line 40 -->
-<div class="flex items-start">
-<span class="w-8 text-right pr-3 select-none text-outline-variant font-code-sm">40</span>
-<span class="text-on-surface"><span class="text-tertiary">async function</span> <span class="text-primary">authenticateUser</span>(req: Request, res: Response) {</span>
-</div>
-<!-- Line 41 -->
-<div class="flex items-start">
-<span class="w-8 text-right pr-3 select-none text-outline-variant font-code-sm">41</span>
-<span class="text-on-surface pl-3"><span class="text-tertiary">const</span> { id } = req.body;</span>
-</div>
-<!-- Line 42 (VULNERABLE LINE) -->
-<div class="flex items-start bg-secondary-container/20 border-l-2 border-secondary my-1">
-<span class="w-8 text-right pr-3 select-none text-secondary font-bold font-code-sm">-42</span>
-<span class="text-secondary pl-3 font-semibold break-all">- const user = await db.query("SELECT * FROM users WHERE id = '" + req.body.id + "'");</span>
-</div>
-<!-- Taint Annotation Callout -->
-<div class="my-1.5 ml-8 mr-2 p-2 rounded bg-secondary-container/10 border border-secondary/40 text-secondary text-body-sm font-body-sm flex items-start gap-1.5 shadow-[0_0_12px_-2px_rgba(239,68,68,0.15)]">
-<span class="material-symbols-outlined text-[16px] text-secondary flex-shrink-0">warning</span>
-<span><strong>Taint Hazard:</strong> Unsanitized user input <code class="bg-surface-container px-1 py-0.5 rounded text-on-surface text-[11px]">req.body.id</code> directly concatenated into raw SQL execution string.</span>
-</div>
-<!-- Line 43 -->
-<div class="flex items-start">
-<span class="w-8 text-right pr-3 select-none text-outline-variant font-code-sm">43</span>
-<span class="text-on-surface pl-3"><span class="text-tertiary">if</span> (!user) <span class="text-tertiary">throw new</span> NotFoundError();</span>
-</div>
-<!-- Line 44 -->
-<div class="flex items-start">
-<span class="w-8 text-right pr-3 select-none text-outline-variant font-code-sm">44</span>
-<span class="text-on-surface pl-3"><span class="text-tertiary">return</span> res.json({ token: signJwt(user) });</span>
-</div>
-<!-- Line 45 -->
-<div class="flex items-start">
-<span class="w-8 text-right pr-3 select-none text-outline-variant font-code-sm">45</span>
-<span class="text-on-surface">}</span>
-</div>
-</div>
-</div>
-<!-- Right Pane: AFTER • AUTONOMOUS PATCH -->
-<div class="flex flex-col bg-surface-container-lowest">
-<div class="px-space-md py-1.5 bg-surface-container-lowest border-b border-surface-variant flex items-center justify-between">
-<div class="flex items-center gap-2">
-<span class="h-2 w-2 rounded-full bg-primary"></span>
-<span class="font-label-sm text-label-sm text-primary font-semibold uppercase tracking-wider">AFTER • AUTONOMOUS PATCH</span>
-</div>
-<span class="px-1.5 py-0.2 bg-primary/10 border border-primary/30 text-primary font-label-sm text-[10px] rounded">AEGIS v2.4 Certified</span>
-</div>
-<div class="p-space-xs py-space-sm font-mono text-[12px] leading-[22px] overflow-x-auto text-on-surface select-text">
-<!-- Line 39 -->
-<div class="flex items-start">
-<span class="w-8 text-right pr-3 select-none text-outline-variant font-code-sm">39</span>
-<span class="text-outline">// Handler for authentication token dispatch</span>
-</div>
-<!-- Line 40 -->
-<div class="flex items-start">
-<span class="w-8 text-right pr-3 select-none text-outline-variant font-code-sm">40</span>
-<span class="text-on-surface"><span class="text-tertiary">async function</span> <span class="text-primary">authenticateUser</span>(req: Request, res: Response) {</span>
-</div>
-<!-- Line 41 -->
-<div class="flex items-start">
-<span class="w-8 text-right pr-3 select-none text-outline-variant font-code-sm">41</span>
-<span class="text-on-surface pl-3"><span class="text-tertiary">const</span> { id } = req.body;</span>
-</div>
-<!-- Line 42 (REPAIRED LINE) -->
-<div class="flex items-start bg-primary/10 border-l-2 border-primary my-1">
-<span class="w-8 text-right pr-3 select-none text-primary font-bold font-code-sm">+42</span>
-<span class="text-primary pl-3 font-semibold break-all">+ const user = await db.query("SELECT * FROM users WHERE id = $1", [req.body.id]);</span>
-</div>
-<!-- Proof Tag Callout -->
-<div class="my-1.5 ml-8 mr-2 p-2 rounded bg-primary/10 border border-primary/30 text-primary text-body-sm font-body-sm flex items-start gap-1.5 shadow-[0_0_12px_-2px_rgba(16,185,129,0.15)]">
-<span class="material-symbols-outlined text-[16px] text-primary flex-shrink-0" data-weight="fill">verified_user</span>
-<span><strong>Proof Anchor:</strong> Safe Parameterization Binding validated by Z3 SMT solver. Formal invariant holds unconditionally.</span>
-</div>
-<!-- Line 43 -->
-<div class="flex items-start">
-<span class="w-8 text-right pr-3 select-none text-outline-variant font-code-sm">43</span>
-<span class="text-on-surface pl-3"><span class="text-tertiary">if</span> (!user) <span class="text-tertiary">throw new</span> NotFoundError();</span>
-</div>
-<!-- Line 44 -->
-<div class="flex items-start">
-<span class="w-8 text-right pr-3 select-none text-outline-variant font-code-sm">44</span>
-<span class="text-on-surface pl-3"><span class="text-tertiary">return</span> res.json({ token: signJwt(user) });</span>
-</div>
-<!-- Line 45 -->
-<div class="flex items-start">
-<span class="w-8 text-right pr-3 select-none text-outline-variant font-code-sm">45</span>
-<span class="text-on-surface">}</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- AST Flow & Telemetry Inspector (Bento card style) -->
-<div class="bg-surface-container-low border border-surface-variant rounded p-space-md">
-<div class="flex items-center justify-between mb-space-sm">
-<div class="flex items-center gap-space-sm">
-<span class="material-symbols-outlined text-tertiary text-[18px]">account_tree</span>
-<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">AST Syntactic Transformation Inspector</span>
-</div>
-<span class="font-label-sm text-label-sm text-tertiary px-2 py-0.5 bg-tertiary/10 border border-tertiary/30 rounded uppercase">Parser: Tree-sitter-ts</span>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm pt-space-xs">
-<!-- Node 1: Source AST -->
-<div class="p-space-sm bg-surface-container-lowest border border-surface-variant rounded">
-<div class="flex items-center justify-between text-outline text-[11px] font-mono mb-1">
-<span>IDENTIFIER SINK</span>
-<span class="text-secondary">TAINTED</span>
-</div>
-<div class="font-mono text-body-sm text-on-surface">req.body.id</div>
-<div class="text-[10px] font-mono text-outline-variant mt-1">Scope: HTTP_POST_BODY</div>
-</div>
-<!-- Node 2: Transformation Rule -->
-<div class="p-space-sm bg-surface-container-lowest border border-tertiary/40 rounded shadow-[0_0_12px_-2px_rgba(6,182,212,0.15)]">
-<div class="flex items-center justify-between text-tertiary text-[11px] font-mono mb-1">
-<span>TRANSFORMATION</span>
-<span class="text-primary font-bold">QWEN-CODER</span>
-</div>
-<div class="font-mono text-body-sm text-on-surface">BinaryExpr ➔ ParameterizedCall</div>
-<div class="text-[10px] font-mono text-tertiary mt-1">Bind: ArrayLiteral[$1]</div>
-</div>
-<!-- Node 3: Result AST -->
-<div class="p-space-sm bg-surface-container-lowest border border-primary/40 rounded shadow-[0_0_12px_-2px_rgba(16,185,129,0.15)]">
-<div class="flex items-center justify-between text-primary text-[11px] font-mono mb-1">
-<span>SAFE TARGET AST</span>
-<span class="text-primary">SANITY=TRUE</span>
-</div>
-<div class="font-mono text-body-sm text-on-surface">PreparedStmt($1)</div>
-<div class="text-[10px] font-mono text-primary mt-1">Escaping: Native Driver</div>
-</div>
-</div>
-</div>
-</section>
-<!-- RIGHT COLUMN: Formal Verification & Invariant Proof Engine (40% ~ 5 cols) -->
-<section class="lg:col-span-5 flex flex-col gap-space-md">
-<!-- CARD 1: Mathematical Invariant Verification (Z3 SMT Solver) -->
-<div class="bg-surface-container-low border border-surface-variant rounded p-space-md relative overflow-hidden">
-<!-- Neon emerald accent rim -->
-<div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent"></div>
-<div class="flex items-center justify-between mb-space-sm">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
-<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Mathematical Invariant Verification</span>
-</div>
-<span class="px-2 py-0.5 bg-primary/10 border border-primary/40 text-primary font-label-sm text-label-sm uppercase tracking-wider rounded font-bold flex items-center gap-1 shadow-[0_0_12px_rgba(16,185,129,0.2)]">
-<span class="material-symbols-outlined text-[13px]" data-weight="fill">check_circle</span>
-<span>Q.E.D.</span>
-</span>
-</div>
-<!-- Invariant Formal Specification Block -->
-<div class="p-space-md bg-surface-container-lowest border border-tertiary/30 rounded mb-space-sm">
-<div class="text-outline text-label-sm font-label-sm mb-1 uppercase tracking-wider">Formal Logic Invariant Statement</div>
-<div class="font-code-lg text-code-lg font-mono text-tertiary tracking-wide py-1 select-all">
-                ∀ input x, TaintedSource(x) ∩ RawQuerySink = ∅
+
+      <!-- CENTER: SCENARIO SELECTOR (APPLE SEGMENTED PILL) -->
+      <div class="hidden md:flex items-center bg-black/40 p-1 rounded-xl border border-white/10 shadow-inner">
+        <button onclick="switchScenario('sqli')" id="pill-sqli" class="scenario-pill flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-medium text-white bg-apple-card shadow-apple-sm transition-all tap-effect">
+          <i data-lucide="database" class="w-3.5 h-3.5 text-rose-400"></i>
+          <span>CWE-89: SQLi</span>
+        </button>
+        <button onclick="switchScenario('xss')" id="pill-xss" class="scenario-pill flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-medium text-apple-muted hover:text-white transition-all tap-effect">
+          <i data-lucide="code-2" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>CWE-79: XSS</span>
+        </button>
+        <button onclick="switchScenario('ssrf')" id="pill-ssrf" class="scenario-pill flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-medium text-apple-muted hover:text-white transition-all tap-effect">
+          <i data-lucide="network" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <span>CWE-918: SSRF</span>
+        </button>
+      </div>
+
+      <!-- RIGHT CONTROLS -->
+      <div class="flex items-center space-x-3">
+        <!-- Re-verify Solver Action Button -->
+        <button onclick="runVerificationAnimation()" id="btn-reverify" class="tap-effect flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-apple-text border border-white/10 transition-colors">
+          <i id="reverify-icon" data-lucide="refresh-cw" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <span id="reverify-text">Re-Verify Z3</span>
+        </button>
+
+        <!-- Merge PR Button -->
+        <button onclick="openMergeModal()" id="btn-merge-pr" class="tap-effect flex items-center space-x-2 px-4 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-glow-emerald transition-all">
+          <i data-lucide="git-merge" class="w-3.5 h-3.5"></i>
+          <span>Merge PR #142</span>
+        </button>
+
+        <!-- GitHub Repo Link -->
+        <a href="https://github.com/AreebIqbal6/AEGIS" target="_blank" rel="noopener noreferrer" class="tap-effect p-2 rounded-lg bg-white/5 hover:bg-white/10 text-apple-muted hover:text-white border border-white/10 transition-colors" title="View Source on GitHub">
+          <i data-lucide="github" class="w-4 h-4"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- MOBILE SCENARIO SELECTOR -->
+    <div class="flex md:hidden items-center justify-between mt-3 pt-3 border-t border-white/10">
+      <span class="text-xs text-apple-muted font-medium">Scenario:</span>
+      <div class="flex space-x-1">
+        <button onclick="switchScenario('sqli')" id="mob-pill-sqli" class="px-2.5 py-1 text-xs rounded-md bg-apple-card text-white">SQLi</button>
+        <button onclick="switchScenario('xss')" id="mob-pill-xss" class="px-2.5 py-1 text-xs rounded-md text-apple-muted">XSS</button>
+        <button onclick="switchScenario('ssrf')" id="mob-pill-ssrf" class="px-2.5 py-1 text-xs rounded-md text-apple-muted">SSRF</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWPORT CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 lg:px-8 py-6 space-y-6">
+
+    <!-- INCIDENT HERO CARD (CALM & INFORMATIVE) -->
+    <section class="glass-material rounded-2xl p-5 lg:p-6 shadow-apple-md relative overflow-hidden border border-white/[0.08]">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        
+        <!-- Left: Incident Overview -->
+        <div class="space-y-2">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <span id="badge-severity" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+              <span class="w-1.5 h-1.5 rounded-full bg-rose-500 mr-1.5 animate-pulse"></span>
+              CRITICAL SEVERITY (CVSS 9.8)
+            </span>
+            <span id="badge-file" class="text-xs font-mono text-apple-muted bg-white/5 px-2.5 py-0.5 rounded-md border border-white/5">
+              controllers/auth.ts:42
+            </span>
+            <span class="text-xs text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 flex items-center">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5 mr-1"></i>
+              Formal Invariant Verified (Q.E.D.)
+            </span>
+          </div>
+
+          <h1 id="incident-title" class="text-xl lg:text-2xl font-bold tracking-tight text-white">
+            CWE-89: SQL Injection via Unescaped String Concatenation
+          </h1>
+
+          <p id="incident-desc" class="text-sm text-apple-muted max-w-4xl leading-relaxed">
+            AEGIS localized untrusted taint reaching <code class="text-rose-300 font-mono">db.query</code> without token boundaries. Autonomous AST surgery synthesized parameterized query binding, and Microsoft Z3 proved that no input string can mutate the AST SQL token tree.
+          </p>
+        </div>
+
+        <!-- Right: Telemetry Mini-Stat Strip -->
+        <div class="flex items-center gap-3 shrink-0 lg:border-l lg:border-white/10 lg:pl-6">
+          <div class="bg-black/30 rounded-xl p-3 border border-white/5 text-center min-w-[90px]">
+            <div class="text-xs text-apple-muted mb-0.5">Repair Time</div>
+            <div id="stat-time" class="text-base font-semibold font-mono text-cyan-400">44.4 ms</div>
+          </div>
+          <div class="bg-black/30 rounded-xl p-3 border border-white/5 text-center min-w-[90px]">
+            <div class="text-xs text-apple-muted mb-0.5">Constraints</div>
+            <div id="stat-constraints" class="text-base font-semibold font-mono text-emerald-400">1,428 SAT</div>
+          </div>
+          <div class="bg-black/30 rounded-xl p-3 border border-white/5 text-center min-w-[90px]">
+            <div class="text-xs text-apple-muted mb-0.5">Regressions</div>
+            <div id="stat-regressions" class="text-base font-semibold font-mono text-white">0 / 42</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PRIMARY STAGE: CODE SURGERY DIFF VIEWER -->
+    <section class="glass-material rounded-2xl overflow-hidden shadow-apple-md border border-white/[0.08]">
+      
+      <!-- Diff Toolbar -->
+      <div class="bg-apple-card/60 px-4 lg:px-6 py-3 border-b border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
+        
+        <!-- Left: File Indicator -->
+        <div class="flex items-center space-x-2.5">
+          <i data-lucide="file-code-2" class="w-4 h-4 text-cyan-400"></i>
+          <span id="diff-filename" class="text-xs font-mono font-medium text-white">controllers/auth.ts</span>
+          <span class="text-xs font-mono text-apple-muted bg-white/5 px-2 py-0.5 rounded border border-white/5">+1 / -1 lines</span>
+        </div>
+
+        <!-- Center / Right: Controls (Side-by-side vs Unified & Copy) -->
+        <div class="flex items-center space-x-3">
+          
+          <!-- View Toggle Segmented Control -->
+          <div class="bg-black/40 p-0.5 rounded-lg border border-white/10 flex text-xs">
+            <button onclick="setDiffView('split')" id="btn-view-split" class="px-2.5 py-1 rounded-md font-medium text-white bg-apple-card shadow-sm transition-all tap-effect">
+              Side-by-Side
+            </button>
+            <button onclick="setDiffView('unified')" id="btn-view-unified" class="px-2.5 py-1 rounded-md font-medium text-apple-muted hover:text-white transition-all tap-effect">
+              Unified Diff
+            </button>
+          </div>
+
+          <!-- Copy Patch Button -->
+          <button onclick="copyPatchToClipboard()" class="tap-effect flex items-center space-x-1.5 px-3 py-1 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-apple-text border border-white/10 transition-colors">
+            <i data-lucide="copy" class="w-3.5 h-3.5 text-apple-muted"></i>
+            <span>Copy Patch</span>
+          </button>
+
+          <!-- Raw Git Diff Download -->
+          <button onclick="downloadPatchFile()" class="tap-effect p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-apple-muted hover:text-white border border-white/10 transition-colors" title="Download .patch file">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- DIFF CONTENT AREA -->
+      <div class="p-4 lg:p-6 font-mono text-xs overflow-x-auto bg-[#070A10]">
+        
+        <!-- SIDE-BY-SIDE VIEW -->
+        <div id="diff-split-view" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          
+          <!-- BEFORE: VULNERABLE -->
+          <div class="rounded-xl border border-rose-500/20 bg-rose-950/10 overflow-hidden">
+            <div class="bg-rose-950/30 px-3 py-2 border-b border-rose-500/20 flex items-center justify-between text-rose-300 font-semibold">
+              <span class="flex items-center"><i data-lucide="alert-triangle" class="w-3.5 h-3.5 mr-1.5 text-rose-400"></i>BEFORE (VULNERABLE)</span>
+              <span class="text-[10px] uppercase tracking-wider text-rose-400/80">Taint Sink Escaped</span>
+            </div>
+            <pre class="p-4 text-apple-text/90 leading-relaxed overflow-x-auto"><code id="code-before">// Handler for user authentication dispatch
+async function authenticateUser(req: Request, res: Response) {
+  const { id } = req.body;
+
+<span class="bg-rose-500/20 text-rose-200 block -mx-4 px-4 py-1 border-l-2 border-rose-500 font-semibold">- const user = await db.query("SELECT * FROM users WHERE id = '" + req.body.id + "'");</span>
+  <span class="text-rose-400/80 text-[11px] block mt-1.5">▲ TAINT SINK HAZARD: Raw unescaped string concatenation allows single-quote SQL escape</span>
+  if (!user) throw new NotFoundError();
+  return res.json({ token: signJwt(user) });
+}</code></pre>
+          </div>
+
+          <!-- AFTER: AUTONOMOUS REPAIR -->
+          <div class="rounded-xl border border-emerald-500/20 bg-emerald-950/10 overflow-hidden">
+            <div class="bg-emerald-950/30 px-3 py-2 border-b border-emerald-500/20 flex items-center justify-between text-emerald-300 font-semibold">
+              <span class="flex items-center"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 mr-1.5 text-emerald-400"></i>AFTER (AEGIS AUTONOMOUS PATCH)</span>
+              <span class="text-[10px] uppercase tracking-wider text-emerald-400/80">Z3 Invariant Verified</span>
+            </div>
+            <pre class="p-4 text-apple-text/90 leading-relaxed overflow-x-auto"><code id="code-after">// Handler for user authentication dispatch
+async function authenticateUser(req: Request, res: Response) {
+  const { id } = req.body;
+
+<span class="bg-emerald-500/20 text-emerald-200 block -mx-4 px-4 py-1 border-l-2 border-emerald-500 font-semibold">+ const user = await db.query("SELECT * FROM users WHERE id = $1", [req.body.id]);</span>
+  <span class="text-emerald-400/80 text-[11px] block mt-1.5">✓ FORMAL ANCHOR: Parameterized placeholder binds user input to parameter slot (UNSAT)</span>
+  if (!user) throw new NotFoundError();
+  return res.json({ token: signJwt(user) });
+}</code></pre>
+          </div>
+
+        </div>
+
+        <!-- UNIFIED DIFF VIEW (HIDDEN BY DEFAULT) -->
+        <div id="diff-unified-view" class="hidden rounded-xl border border-white/10 bg-black/40 overflow-hidden">
+          <div class="bg-white/5 px-3 py-2 border-b border-white/10 flex items-center justify-between text-apple-muted">
+            <span>--- a/controllers/auth.ts &nbsp;&nbsp; +++ b/controllers/auth.ts</span>
+            <span class="text-[10px] font-mono">@@ -40,5 +40,5 @@</span>
+          </div>
+          <pre class="p-4 text-apple-text/90 leading-relaxed overflow-x-auto"><code id="code-unified">@@ -40,5 +40,5 @@ async function authenticateUser(req: Request, res: Response) {
+   const { id } = req.body;
+
+<span class="bg-rose-500/20 text-rose-200 block -mx-4 px-4 py-0.5 border-l-2 border-rose-500 font-semibold">- const user = await db.query("SELECT * FROM users WHERE id = '" + req.body.id + "'");</span>
+<span class="bg-emerald-500/20 text-emerald-200 block -mx-4 px-4 py-0.5 border-l-2 border-emerald-500 font-semibold">+ const user = await db.query("SELECT * FROM users WHERE id = $1", [req.body.id]);</span>
+
+   if (!user) throw new NotFoundError();
+   return res.json({ token: signJwt(user) });
+ }</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PROGRESSIVE DISCLOSURE TABS (EMIL KOWALSKI SEGMENTED CONTROL) -->
+    <section class="glass-material rounded-2xl overflow-hidden shadow-apple-md border border-white/[0.08]">
+      
+      <!-- TAB NAVIGATION -->
+      <div class="border-b border-white/[0.08] px-4 lg:px-6 flex items-center space-x-1 lg:space-x-2 overflow-x-auto">
+        <button onclick="switchTab('z3')" id="tab-btn-z3" class="tab-button py-3.5 px-3 lg:px-4 text-xs font-medium text-cyan-400 border-b-2 border-cyan-400 flex items-center space-x-2 transition-all tap-effect">
+          <i data-lucide="binary" class="w-4 h-4"></i>
+          <span>Formal Proof (Z3 SMT)</span>
+        </button>
+        <button onclick="switchTab('tests')" id="tab-btn-tests" class="tab-button py-3.5 px-3 lg:px-4 text-xs font-medium text-apple-muted hover:text-white border-b-2 border-transparent flex items-center space-x-2 transition-all tap-effect">
+          <i data-lucide="flask-conical" class="w-4 h-4"></i>
+          <span>Regression Chamber (42/42)</span>
+        </button>
+        <button onclick="switchTab('ast')" id="tab-btn-ast" class="tab-button py-3.5 px-3 lg:px-4 text-xs font-medium text-apple-muted hover:text-white border-b-2 border-transparent flex items-center space-x-2 transition-all tap-effect">
+          <i data-lucide="git-fork" class="w-4 h-4"></i>
+          <span>AST Taint Flow (Tree-sitter)</span>
+        </button>
+        <button onclick="switchTab('cicd')" id="tab-btn-cicd" class="tab-button py-3.5 px-3 lg:px-4 text-xs font-medium text-apple-muted hover:text-white border-b-2 border-transparent flex items-center space-x-2 transition-all tap-effect">
+          <i data-lucide="shield" class="w-4 h-4"></i>
+          <span>CI/CD Gate & Audit</span>
+        </button>
+      </div>
+
+      <!-- TAB 1: FORMAL PROOF (Z3 SMT) -->
+      <div id="tab-content-z3" class="tab-content p-5 lg:p-6 space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-black/30 p-4 rounded-xl border border-white/5">
+          <div class="space-y-1">
+            <div class="text-xs font-mono text-cyan-400 font-semibold tracking-wide uppercase">First-Order Logic Invariant</div>
+            <div id="z3-formula" class="font-mono text-sm text-white font-medium">
+              ∀ input x ∈ Strings, TaintedSource(x) ∧ RawQuerySink = ∅ &nbsp;⇒&nbsp; ValidSyntaxTree(Ast) ≡ Constant
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 shrink-0">
+            <span class="text-xs px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-medium">
+              Theorem Status: UNSAT (Q.E.D.)
+            </span>
+            <button onclick="runVerificationAnimation()" class="tap-effect px-3 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-lg text-xs font-medium transition-colors">
+              Re-Prove Invariant
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <!-- SMT-LIB2 Code Viewer -->
+          <div class="lg:col-span-2 bg-[#070A10] p-4 rounded-xl border border-white/5 font-mono text-xs overflow-x-auto">
+            <div class="text-[11px] text-apple-muted mb-2 pb-2 border-b border-white/5 flex items-center justify-between">
+              <span>smt-lib2 specification output</span>
+              <span>Z3 Prover v4.12.2</span>
+            </div>
+            <pre class="text-slate-300 leading-relaxed"><code id="z3-smt-code">; AEGIS Invariant Specification for Parameterized Query
+(set-logic QF_S)
+(declare-const taint String)
+(declare-const query_template String)
+(declare-const bound_param String)
+
+; Model user injection attempt
+(assert (str.contains taint "' OR '1'='1"))
+
+; Prove parameter binding isolation
+(assert (= query_template "SELECT * FROM users WHERE id = $1"))
+(assert (not (str.contains query_template taint)))
+
+; Check satisfiability of exploit state
+(check-sat)
+; Result: unsat (No execution path allows user input to break syntax barrier)</code></pre>
+          </div>
+
+          <!-- Proof Metrics -->
+          <div class="bg-black/30 p-4 rounded-xl border border-white/5 space-y-3">
+            <div class="text-xs font-semibold text-white uppercase tracking-wider">Solver Diagnostics</div>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between py-1 border-b border-white/5">
+                <span class="text-apple-muted">Theory Logic</span>
+                <span class="font-mono text-white">QF_S (Quantifier-Free Strings)</span>
               </div>
-<div class="font-body-sm text-body-sm text-on-surface-variant mt-1 border-t border-surface-variant pt-1.5">
-                Property: No execution path exists where unvalidated tainted bytes reach SQL tokenizer.
+              <div class="flex justify-between py-1 border-b border-white/5">
+                <span class="text-apple-muted">Search Depth</span>
+                <span class="font-mono text-white">Inductive Step k=3</span>
               </div>
-</div>
-<!-- Solver Result Details -->
-<div class="space-y-space-xs font-code-sm text-code-sm">
-<div class="flex items-center justify-between p-space-xs px-space-sm bg-surface-container-lowest rounded border border-surface-variant">
-<span class="text-on-surface-variant">SMT Result Status</span>
-<span class="text-primary font-medium flex items-center gap-1">
-<span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                  SAT (0 counterexamples found in 210ms)
-                </span>
-</div>
-<div class="flex items-center justify-between p-space-xs px-space-sm bg-surface-container-lowest rounded border border-surface-variant">
-<span class="text-on-surface-variant">Proof Invariant State</span>
-<span class="text-on-surface">Formula Valid • Inductive step holds</span>
-</div>
-<div class="grid grid-cols-3 gap-2 pt-1 text-center">
-<div class="p-1.5 bg-surface-container-lowest rounded border border-surface-variant">
-<div class="text-outline text-[10px] font-mono">CONSTRAINTS</div>
-<div class="font-code-md text-code-md text-on-surface font-semibold">1,428</div>
-</div>
-<div class="p-1.5 bg-surface-container-lowest rounded border border-surface-variant">
-<div class="text-outline text-[10px] font-mono">PEAK MEMORY</div>
-<div class="font-code-md text-code-md text-on-surface font-semibold">18.4 MB</div>
-</div>
-<div class="p-1.5 bg-surface-container-lowest rounded border border-surface-variant">
-<div class="text-outline text-[10px] font-mono">SOLVER CORE</div>
-<div class="font-code-md text-code-md text-tertiary font-semibold">Z3 v4.12.2</div>
-</div>
-</div>
-</div>
-</div>
-<!-- CARD 2: Regression Test Matrix -->
-<div class="bg-surface-container-low border border-surface-variant rounded p-space-md">
-<div class="flex items-center justify-between mb-space-sm">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-[18px]">fact_check</span>
-<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Regression Test Chamber</span>
-</div>
-<span class="font-code-sm text-code-sm text-primary font-bold">42/42 Tests Passing (100%)</span>
-</div>
-<!-- Neon emerald progress bar -->
-<div class="w-full bg-surface-container-lowest h-1.5 rounded overflow-hidden border border-surface-variant mb-space-md">
-<div class="bg-primary h-full w-full shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
-</div>
-<!-- Detailed execution items -->
-<div class="space-y-1.5 font-code-sm text-code-sm">
-<div class="flex items-center justify-between p-space-xs px-space-sm bg-surface-container-lowest rounded border border-surface-variant hover:border-outline-variant transition-colors">
-<div class="flex items-center gap-2 truncate">
-<span class="material-symbols-outlined text-primary text-[15px]" data-weight="fill">check</span>
-<span class="text-on-surface truncate">auth.test.ts: should prevent single-quote escape</span>
-</div>
-<span class="text-outline font-mono text-[11px] ml-2">12ms</span>
-</div>
-<div class="flex items-center justify-between p-space-xs px-space-sm bg-surface-container-lowest rounded border border-surface-variant hover:border-outline-variant transition-colors">
-<div class="flex items-center gap-2 truncate">
-<span class="material-symbols-outlined text-primary text-[15px]" data-weight="fill">check</span>
-<span class="text-on-surface truncate">auth.test.ts: should authenticate valid user</span>
-</div>
-<span class="text-outline font-mono text-[11px] ml-2">8ms</span>
-</div>
-<div class="flex items-center justify-between p-space-xs px-space-sm bg-surface-container-lowest rounded border border-surface-variant hover:border-outline-variant transition-colors">
-<div class="flex items-center gap-2 truncate">
-<span class="material-symbols-outlined text-primary text-[15px]" data-weight="fill">check</span>
-<span class="text-on-surface truncate">payments.test.ts: integration regression pass</span>
-</div>
-<span class="text-outline font-mono text-[11px] ml-2">34ms</span>
-</div>
-<div class="flex items-center justify-between p-space-xs px-space-sm bg-surface-container-lowest rounded border border-surface-variant hover:border-outline-variant transition-colors">
-<div class="flex items-center gap-2 truncate">
-<span class="material-symbols-outlined text-primary text-[15px]" data-weight="fill">check</span>
-<span class="text-on-surface truncate">security_fuzz.test.ts: 10,000 automated fuzz mutations</span>
-</div>
-<span class="text-outline font-mono text-[11px] ml-2">56ms</span>
-</div>
-</div>
-</div>
-<!-- CARD 3: Execution Telemetry Timeline -->
-<div class="bg-surface-container-low border border-surface-variant rounded p-space-md">
-<div class="flex items-center justify-between mb-space-md">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-tertiary text-[18px]">timeline</span>
-<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Execution Telemetry Timeline</span>
-</div>
-<span class="px-2 py-0.5 bg-surface-container border border-surface-variant text-on-surface-variant font-code-sm text-code-sm rounded">
-                1.24s turnaround
-              </span>
-</div>
-<div class="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-[1px] before:bg-surface-variant">
-<!-- Step 1 -->
-<div class="relative flex items-center justify-between">
-<div class="absolute -left-6 top-1 h-3 w-3 rounded-full bg-surface-container-low border border-tertiary flex items-center justify-center">
-<span class="h-1.5 w-1.5 rounded-full bg-tertiary"></span>
-</div>
-<div>
-<div class="font-body-md text-body-md text-on-surface font-medium">Taint Sink Localized</div>
-<div class="font-code-sm text-code-sm text-outline">Engine: Tree-sitter Static CFG</div>
-</div>
-<span class="font-code-sm text-code-sm text-tertiary">140ms</span>
-</div>
-<!-- Step 2 -->
-<div class="relative flex items-center justify-between">
-<div class="absolute -left-6 top-1 h-3 w-3 rounded-full bg-surface-container-low border border-primary flex items-center justify-center">
-<span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
-</div>
-<div>
-<div class="font-body-md text-body-md text-on-surface font-medium">Candidate Patch Synthesized</div>
-<div class="font-code-sm text-code-sm text-outline">Neural Engine: Qwen2.5-Coder</div>
-</div>
-<span class="font-code-sm text-code-sm text-primary">780ms</span>
-</div>
-<!-- Step 3 -->
-<div class="relative flex items-center justify-between">
-<div class="absolute -left-6 top-1 h-3 w-3 rounded-full bg-surface-container-low border border-primary flex items-center justify-center">
-<span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
-</div>
-<div>
-<div class="font-body-md text-body-md text-on-surface font-medium">Invariant Verified (No SAT Violations)</div>
-<div class="font-code-sm text-code-sm text-outline">Prover: Z3 v4.12.2</div>
-</div>
-<span class="font-code-sm text-code-sm text-primary">210ms</span>
-</div>
-<!-- Step 4 -->
-<div class="relative flex items-center justify-between">
-<div class="absolute -left-6 top-1 h-3 w-3 rounded-full bg-surface-container-low border border-primary flex items-center justify-center">
-<span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
-</div>
-<div>
-<div class="font-body-md text-body-md text-on-surface font-medium">Regression Test Chamber Passed</div>
-<div class="font-code-sm text-code-sm text-outline">Runner: V8 Isolate Sandbox</div>
-</div>
-<span class="font-code-sm text-code-sm text-primary">110ms</span>
-</div>
-</div>
-</div>
-</section>
-</div>
-</main>
-</div>
-<!-- BOTTOM STICKY ACTION BAR -->
-<footer class="fixed bottom-0 left-0 w-full z-50 h-11 flex justify-between items-center px-gutter lg:px-gutter-desktop bg-surface-container-lowest border-t border-surface-variant">
-<!-- Left: Cryptographic Verification Stamp -->
-<div class="flex items-center gap-space-sm font-code-sm text-code-sm text-outline truncate">
-<span class="material-symbols-outlined text-[15px] text-primary" data-weight="fill">verified</span>
-<span class="truncate">Verified by AEGIS Engine v2.4 • SHA-256: <strong class="text-on-surface-variant font-mono">8f2c9b...e4a1</strong> • SOC2 Type II Certified</span>
-</div>
-<!-- Right: Operational CTAs -->
-<div class="flex items-center gap-space-sm">
-<!-- Ghost: View Raw AST Tree -->
-<button class="hidden sm:flex items-center gap-1.5 px-space-sm py-1 bg-transparent border border-surface-variant hover:border-outline text-on-surface font-code-sm text-code-sm rounded transition-colors">
-<span class="material-symbols-outlined text-[14px]">account_tree</span>
-<span>View Raw AST Tree</span>
-</button>
-<!-- Ghost: Open in GitHub -->
-<button class="hidden md:flex items-center gap-1.5 px-space-sm py-1 bg-transparent border border-surface-variant hover:border-outline text-on-surface font-code-sm text-code-sm rounded transition-colors">
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-<span>Open in GitHub</span>
-</button>
-<!-- Primary Action CTA: Merge Verified PR #143 with Keyboard shortcut -->
-<button class="flex items-center gap-2 px-space-md py-1 bg-primary text-on-primary font-label-md text-label-md rounded font-bold hover:bg-primary-fixed-dim transition-all shadow-[0_0_16px_rgba(16,185,129,0.35)] active:scale-[0.98]">
-<span class="material-symbols-outlined text-[16px]">call_merge</span>
-<span>Merge Verified PR #143</span>
-<div class="hidden sm:flex items-center gap-0.5 ml-1 px-1.5 py-0.2 bg-on-primary/20 rounded font-code-sm text-[10px] text-on-primary">
-<span>⌘</span>
-<span>↵</span>
-</div>
-</button>
-</div>
-</footer>
-</body></html>
+              <div class="flex justify-between py-1 border-b border-white/5">
+                <span class="text-apple-muted">Clause Iterations</span>
+                <span class="font-mono text-white">1,428 clauses</span>
+              </div>
+              <div class="flex justify-between py-1 border-b border-white/5">
+                <span class="text-apple-muted">Peak Resident Memory</span>
+                <span class="font-mono text-white">18.4 MB</span>
+              </div>
+              <div class="flex justify-between py-1">
+                <span class="text-apple-muted">Proof Refutation</span>
+                <span class="font-mono text-emerald-400 font-medium">Valid Q.E.D.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: REGRESSION TEST CHAMBER -->
+      <div id="tab-content-tests" class="tab-content hidden p-5 lg:p-6 space-y-4">
+        <div class="flex items-center justify-between bg-black/30 p-4 rounded-xl border border-white/5">
+          <div class="space-y-1">
+            <div class="text-sm font-semibold text-white flex items-center">
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 mr-2"></i>
+              All 42 Regression Test Cases Passing (100%)
+            </div>
+            <div class="text-xs text-apple-muted">No functional behavior or API response schemas broken by the patch.</div>
+          </div>
+          <button onclick="runTestSimulation()" id="btn-run-tests" class="tap-effect px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-white border border-white/10 flex items-center space-x-1.5">
+            <i data-lucide="play" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>Re-run Suite</span>
+          </button>
+        </div>
+
+        <div class="space-y-2 font-mono text-xs" id="test-chamber-list">
+          <div class="flex items-center justify-between p-3 rounded-lg bg-black/20 border border-white/5">
+            <div class="flex items-center space-x-2.5">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+              <span class="text-white">auth.test.ts: should prevent single quote SQL escape</span>
+            </div>
+            <span class="text-apple-muted">12 ms</span>
+          </div>
+          <div class="flex items-center justify-between p-3 rounded-lg bg-black/20 border border-white/5">
+            <div class="flex items-center space-x-2.5">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+              <span class="text-white">auth.test.ts: should authenticate valid admin user</span>
+            </div>
+            <span class="text-apple-muted">8 ms</span>
+          </div>
+          <div class="flex items-center justify-between p-3 rounded-lg bg-black/20 border border-white/5">
+            <div class="flex items-center space-x-2.5">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+              <span class="text-white">payments.test.ts: backward compatibility integration suite</span>
+            </div>
+            <span class="text-apple-muted">34 ms</span>
+          </div>
+          <div class="flex items-center justify-between p-3 rounded-lg bg-black/20 border border-white/5">
+            <div class="flex items-center space-x-2.5">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+              <span class="text-white">security_fuzz.test.ts: 10,000 automated fuzz mutations</span>
+            </div>
+            <span class="text-apple-muted">56 ms</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: AST TAINT FLOW -->
+      <div id="tab-content-ast" class="tab-content hidden p-5 lg:p-6 space-y-4">
+        <div class="text-xs text-apple-muted mb-2">
+          Tree-sitter Abstract Syntax Tree (AST) Source-to-Sink Taint Propagation Graph:
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 font-mono text-xs">
+          <!-- Step 1 -->
+          <div class="bg-black/30 p-3.5 rounded-xl border border-white/5 space-y-2">
+            <div class="flex items-center justify-between text-cyan-400 font-semibold">
+              <span>1. Taint Source</span>
+              <span class="text-[10px] bg-cyan-500/10 px-1.5 py-0.5 rounded">HTTP IN</span>
+            </div>
+            <div class="text-white font-medium">req.body.id</div>
+            <div class="text-[11px] text-apple-muted">Identifier AST node bound to unvalidated user JSON body.</div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="bg-black/30 p-3.5 rounded-xl border border-white/5 space-y-2">
+            <div class="flex items-center justify-between text-amber-400 font-semibold">
+              <span>2. Flow Propagation</span>
+              <span class="text-[10px] bg-amber-500/10 px-1.5 py-0.5 rounded">CONCAT</span>
+            </div>
+            <div class="text-white font-medium">BinaryExpression (+)</div>
+            <div class="text-[11px] text-apple-muted">String concatenation operator binds tainted identifier into query string.</div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="bg-black/30 p-3.5 rounded-xl border border-white/5 space-y-2">
+            <div class="flex items-center justify-between text-rose-400 font-semibold">
+              <span>3. Target Sink</span>
+              <span class="text-[10px] bg-rose-500/10 px-1.5 py-0.5 rounded">CWE-89</span>
+            </div>
+            <div class="text-white font-medium">db.query(sql)</div>
+            <div class="text-[11px] text-apple-muted">CallExpression matches dangerous SQL sink taxonomy definition.</div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="bg-black/30 p-3.5 rounded-xl border border-white/5 space-y-2">
+            <div class="flex items-center justify-between text-emerald-400 font-semibold">
+              <span>4. AST Surgery</span>
+              <span class="text-[10px] bg-emerald-500/10 px-1.5 py-0.5 rounded">REWRITTEN</span>
+            </div>
+            <div class="text-white font-medium">ParamBinding ($1)</div>
+            <div class="text-[11px] text-apple-muted">Rewritten into parameterized call with ArrayLiteral parameter values.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: CI/CD PIPELINE & AUDIT -->
+      <div id="tab-content-cicd" class="tab-content hidden p-5 lg:p-6 space-y-4">
+        <div class="bg-black/30 p-4 rounded-xl border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="text-sm font-semibold text-white">Autonomous Pull Request Pipeline</div>
+            <div class="text-xs text-apple-muted font-mono">Branch: hotfix/aegis-repair-cwe89 &nbsp;→&nbsp; main</div>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs px-2.5 py-1 rounded-md bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-mono">
+              Signed-by: AEGIS Key 0x8F2C9B
+            </span>
+          </div>
+        </div>
+
+        <div class="space-y-3 font-mono text-xs">
+          <div class="p-3 rounded-lg bg-black/20 border border-white/5 flex items-center justify-between">
+            <span class="text-apple-muted">Cryptographic Digest</span>
+            <span class="text-white">SHA-256: 8f2c9b4e1d7a3f0e8a7c2b6d5f4e3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f</span>
+          </div>
+          <div class="p-3 rounded-lg bg-black/20 border border-white/5 flex items-center justify-between">
+            <span class="text-apple-muted">Compliance Standards</span>
+            <span class="text-emerald-400">SOC2 Type II • ISO 27001 • OWASP Top-10 Compliant</span>
+          </div>
+          <div class="p-3 rounded-lg bg-black/20 border border-white/5 flex items-center justify-between">
+            <span class="text-apple-muted">CI Gate Status</span>
+            <span class="text-emerald-400 font-semibold">GREEN (Safe to Merge Automatically)</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- MERGE PR MODAL (APPLE SHEET) -->
+  <div id="merge-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="merge-modal-card" class="glass-material rounded-2xl max-w-lg w-full p-6 space-y-5 border border-white/10 shadow-apple-lg transform scale-95 transition-transform duration-300">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+            <i data-lucide="git-pull-request" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-white">Merge Pull Request #142</h3>
+            <p class="text-xs text-apple-muted">Autonomous hotfix for CWE-89</p>
+          </div>
+        </div>
+        <button onclick="closeMergeModal()" class="tap-effect p-1.5 rounded-lg text-apple-muted hover:text-white hover:bg-white/10">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div id="modal-content-pending" class="space-y-4">
+        <div class="bg-black/30 p-3.5 rounded-xl border border-white/5 space-y-2 text-xs">
+          <div class="flex justify-between">
+            <span class="text-apple-muted">Target Branch</span>
+            <span class="font-mono text-white">main</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-apple-muted">Source Branch</span>
+            <span class="font-mono text-cyan-400">hotfix/aegis-repair-cwe89</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-apple-muted">Theorem Prover</span>
+            <span class="text-emerald-400 font-semibold">Z3 SMT Invariant Verified</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-apple-muted">Regression Suite</span>
+            <span class="text-emerald-400 font-semibold">42 / 42 Tests Passed</span>
+          </div>
+        </div>
+
+        <p class="text-xs text-apple-muted leading-relaxed">
+          This commit will be cryptographically signed by AEGIS Bot and pushed to the upstream repository at <code class="text-white">AreebIqbal6/AEGIS</code>.
+        </p>
+
+        <!-- Modal Actions -->
+        <div class="flex items-center justify-end space-x-3 pt-2">
+          <button onclick="closeMergeModal()" class="tap-effect px-4 py-2 rounded-lg text-xs font-medium text-apple-muted hover:text-white bg-white/5 hover:bg-white/10 border border-white/10">
+            Cancel
+          </button>
+          <button onclick="executeMergeAction()" id="btn-confirm-merge" class="tap-effect px-5 py-2 rounded-lg text-xs font-semibold bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-glow-emerald flex items-center space-x-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Confirm & Merge</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body: Success State -->
+      <div id="modal-content-success" class="hidden text-center py-4 space-y-3">
+        <div class="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 mx-auto flex items-center justify-center">
+          <i data-lucide="check-check" class="w-6 h-6"></i>
+        </div>
+        <h4 class="text-base font-semibold text-white">Pull Request Merged Successfully!</h4>
+        <p class="text-xs text-apple-muted font-mono">Commit SHA: 9f8a2c4e1d7a (Signed by AEGIS)</p>
+        <div class="pt-2">
+          <button onclick="closeMergeModal()" class="tap-effect px-5 py-2 rounded-lg text-xs font-medium bg-white/10 hover:bg-white/15 text-white border border-white/10">
+            Done
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCRIPT: INTERACTIVE CONTROLLER (ZERO DEAD BUTTONS) -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // SCENARIO DATA STORE
+    const scenarios = {
+      sqli: {
+        severity: 'CRITICAL SEVERITY (CVSS 9.8)',
+        severityBg: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+        file: 'controllers/auth.ts:42',
+        title: 'CWE-89: SQL Injection via Unescaped String Concatenation',
+        desc: 'AEGIS localized untrusted taint reaching db.query without token boundaries. Autonomous AST surgery synthesized parameterized query binding, and Microsoft Z3 proved that no input string can mutate the AST SQL token tree.',
+        time: '44.4 ms',
+        constraints: '1,428 SAT',
+        regressions: '0 / 42',
+        filename: 'controllers/auth.ts',
+        diffLines: '+1 / -1 lines',
+        beforeCode: `// Handler for user authentication dispatch
+async function authenticateUser(req: Request, res: Response) {
+  const { id } = req.body;
+
+<span class="bg-rose-500/20 text-rose-200 block -mx-4 px-4 py-1 border-l-2 border-rose-500 font-semibold">- const user = await db.query("SELECT * FROM users WHERE id = '" + req.body.id + "'");</span>
+  <span class="text-rose-400/80 text-[11px] block mt-1.5">▲ TAINT SINK HAZARD: Raw unescaped string concatenation allows single-quote SQL escape</span>
+  if (!user) throw new NotFoundError();
+  return res.json({ token: signJwt(user) });
+}`,
+        afterCode: `// Handler for user authentication dispatch
+async function authenticateUser(req: Request, res: Response) {
+  const { id } = req.body;
+
+<span class="bg-emerald-500/20 text-emerald-200 block -mx-4 px-4 py-1 border-l-2 border-emerald-500 font-semibold">+ const user = await db.query("SELECT * FROM users WHERE id = $1", [req.body.id]);</span>
+  <span class="text-emerald-400/80 text-[11px] block mt-1.5">✓ FORMAL ANCHOR: Parameterized placeholder binds user input to parameter slot (UNSAT)</span>
+  if (!user) throw new NotFoundError();
+  return res.json({ token: signJwt(user) });
+}`,
+        unifiedCode: `@@ -40,5 +40,5 @@ async function authenticateUser(req: Request, res: Response) {
+   const { id } = req.body;
+
+<span class="bg-rose-500/20 text-rose-200 block -mx-4 px-4 py-0.5 border-l-2 border-rose-500 font-semibold">- const user = await db.query("SELECT * FROM users WHERE id = '" + req.body.id + "'");</span>
+<span class="bg-emerald-500/20 text-emerald-200 block -mx-4 px-4 py-0.5 border-l-2 border-emerald-500 font-semibold">+ const user = await db.query("SELECT * FROM users WHERE id = $1", [req.body.id]);</span>
+
+   if (!user) throw new NotFoundError();
+   return res.json({ token: signJwt(user) });
+ }`,
+        rawPatch: `--- a/controllers/auth.ts
++++ b/controllers/auth.ts
+@@ -42,1 +42,1 @@
+-  const user = await db.query("SELECT * FROM users WHERE id = '" + req.body.id + "'");
++  const user = await db.query("SELECT * FROM users WHERE id = $1", [req.body.id]);`,
+        formula: '∀ input x ∈ Strings, TaintedSource(x) ∧ RawQuerySink = ∅  ⇒  ValidSyntaxTree(Ast) ≡ Constant',
+        smtCode: `; AEGIS Invariant Specification for Parameterized Query
+(set-logic QF_S)
+(declare-const taint String)
+(declare-const query_template String)
+(declare-const bound_param String)
+
+; Model user injection attempt
+(assert (str.contains taint "' OR '1'='1"))
+
+; Prove parameter binding isolation
+(assert (= query_template "SELECT * FROM users WHERE id = $1"))
+(assert (not (str.contains query_template taint)))
+
+; Check satisfiability of exploit state
+(check-sat)
+; Result: unsat (No execution path allows user input to break syntax barrier)`
+      },
+
+      xss: {
+        severity: 'HIGH SEVERITY (CVSS 8.2)',
+        severityBg: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+        file: 'views/comments.tsx:28',
+        title: 'CWE-79: Stored Cross-Site Scripting via dangerouslySetInnerHTML',
+        desc: 'Unsanitized user comments rendered directly to browser DOM. AEGIS synthesized DOMPurify context-aware HTML sanitizer, proving zero executable script or inline event handlers can execute.',
+        time: '31.2 ms',
+        constraints: '892 SAT',
+        regressions: '0 / 42',
+        filename: 'views/comments.tsx',
+        diffLines: '+2 / -1 lines',
+        beforeCode: `export function CommentCard({ comment }: { comment: Comment }) {
+  return (
+    <div className="comment-bubble">
+<span class="bg-rose-500/20 text-rose-200 block -mx-4 px-4 py-1 border-l-2 border-rose-500 font-semibold">-   <div dangerouslySetInnerHTML={{ __html: comment.content }} /></span>
+      <span class="text-rose-400/80 text-[11px] block mt-1.5">▲ TAINT SINK HAZARD: Raw HTML injection allows execution of arbitrary attacker JavaScript</span>
+    </div>
+  );
+}`,
+        afterCode: `export function CommentCard({ comment }: { comment: Comment }) {
+  return (
+    <div className="comment-bubble">
+<span class="bg-emerald-500/20 text-emerald-200 block -mx-4 px-4 py-1 border-l-2 border-emerald-500 font-semibold">+   <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.content) }} /></span>
+      <span class="text-emerald-400/80 text-[11px] block mt-1.5">✓ FORMAL ANCHOR: DOMPurify AST sanitization strips script tags, iframe, and onclick handlers</span>
+    </div>
+  );
+}`,
+        unifiedCode: `@@ -26,3 +26,3 @@ export function CommentCard({ comment }: { comment: Comment }) {
+   return (
+     <div className="comment-bubble">
+<span class="bg-rose-500/20 text-rose-200 block -mx-4 px-4 py-0.5 border-l-2 border-rose-500 font-semibold">-   <div dangerouslySetInnerHTML={{ __html: comment.content }} /></span>
+<span class="bg-emerald-500/20 text-emerald-200 block -mx-4 px-4 py-0.5 border-l-2 border-emerald-500 font-semibold">+   <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.content) }} /></span>
+     </div>
+   );`,
+        rawPatch: `--- a/views/comments.tsx
++++ b/views/comments.tsx
+@@ -28,1 +28,1 @@
+-    <div dangerouslySetInnerHTML={{ __html: comment.content }} />
++    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.content) }} />`,
+        formula: '∀ markup m ∈ DOM, ScriptTokens(DOMPurify(m)) = ∅  ∧  EventHandlers(DOMPurify(m)) = ∅',
+        smtCode: `; AEGIS Invariant Specification for DOM Sanitization
+(set-logic QF_S)
+(declare-const dom_input String)
+(declare-const sanitized String)
+
+; Model XSS payload
+(assert (str.contains dom_input "<img src=x onerror=alert(document.cookie)>"))
+
+; Sanitization invariant property
+(assert (not (str.contains sanitized "onerror=")))
+(assert (not (str.contains sanitized "onload=")))
+
+(check-sat)
+; Result: unsat (Exploit pattern completely eradicated from output)`
+      },
+
+      ssrf: {
+        severity: 'CRITICAL SEVERITY (CVSS 9.6)',
+        severityBg: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+        file: 'services/webhook.ts:89',
+        title: 'CWE-918: Server-Side Request Forgery via Unchecked Webhook Dispatch',
+        desc: 'Unchecked fetch(url) permitted attackers to probe cloud internal metadata endpoints (169.254.169.254). AEGIS inserted an IP range invariant filter and DNS rebinding protection.',
+        time: '52.7 ms',
+        constraints: '2,104 SAT',
+        regressions: '0 / 42',
+        filename: 'services/webhook.ts',
+        diffLines: '+4 / -1 lines',
+        beforeCode: `export async function triggerWebhook(targetUrl: string, payload: any) {
+  // Outbound notification dispatcher
+<span class="bg-rose-500/20 text-rose-200 block -mx-4 px-4 py-1 border-l-2 border-rose-500 font-semibold">- return await fetch(targetUrl, { method: "POST", body: JSON.stringify(payload) });</span>
+  <span class="text-rose-400/80 text-[11px] block mt-1.5">▲ TAINT SINK HAZARD: Target URL accepts internal VPC & AWS 169.254.169.254 metadata ranges</span>
+}`,
+        afterCode: `export async function triggerWebhook(targetUrl: string, payload: any) {
+  // Outbound notification dispatcher with formal SSRF boundary check
+<span class="bg-emerald-500/20 text-emerald-200 block -mx-4 px-4 py-1 border-l-2 border-emerald-500 font-semibold">+ const validatedUrl = await assertPublicInternetEndpoint(targetUrl);
++ return await fetch(validatedUrl, { method: "POST", body: JSON.stringify(payload) });</span>
+  <span class="text-emerald-400/80 text-[11px] block mt-1.5">✓ FORMAL ANCHOR: Proves target IP ∉ [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.169.254]</span>
+}`,
+        unifiedCode: `@@ -88,2 +88,3 @@ export async function triggerWebhook(targetUrl: string, payload: any) {
+   // Outbound notification dispatcher
+<span class="bg-rose-500/20 text-rose-200 block -mx-4 px-4 py-0.5 border-l-2 border-rose-500 font-semibold">- return await fetch(targetUrl, { method: "POST", body: JSON.stringify(payload) });</span>
+<span class="bg-emerald-500/20 text-emerald-200 block -mx-4 px-4 py-0.5 border-l-2 border-emerald-500 font-semibold">+ const validatedUrl = await assertPublicInternetEndpoint(targetUrl);
++ return await fetch(validatedUrl, { method: "POST", body: JSON.stringify(payload) });</span>
+ }`,
+        rawPatch: `--- a/services/webhook.ts
++++ b/services/webhook.ts
+@@ -89,1 +89,2 @@
+-  return await fetch(targetUrl, { method: "POST", body: JSON.stringify(payload) });
++  const validatedUrl = await assertPublicInternetEndpoint(targetUrl);
++  return await fetch(validatedUrl, { method: "POST", body: JSON.stringify(payload) });`,
+        formula: '∀ ip ∈ ResolveDns(url),  ip ∉ PrivateSubnets  ∧  ip ≠ 169.254.169.254',
+        smtCode: `; AEGIS Invariant Specification for SSRF Boundary
+(set-logic QF_BV)
+(declare-const target_ip (_ BitVec 32))
+
+; Define AWS IMDSv1/v2 metadata IP: 169.254.169.254 = #xA9FEA9FE
+(define-const metadata_ip (_ BitVec 32) #xA9FEA9FE)
+
+; Invariant: Outbound target can never equal metadata IP or loopback
+(assert (= target_ip metadata_ip))
+
+(check-sat)
+; Result: unsat (Invariant holds: target_ip is strictly disjoint from protected zones)`
+      }
+    };
+
+    let activeScenarioKey = 'sqli';
+
+    // SCENARIO SWITCHING
+    function switchScenario(key) {
+      if (!scenarios[key]) return;
+      activeScenarioKey = key;
+      const s = scenarios[key];
+
+      // Update Header Pills
+      document.querySelectorAll('.scenario-pill').forEach(btn => {
+        btn.classList.remove('text-white', 'bg-apple-card', 'shadow-apple-sm');
+        btn.classList.add('text-apple-muted');
+      });
+      const activePill = document.getElementById(`pill-${key}`);
+      if (activePill) {
+        activePill.classList.remove('text-apple-muted');
+        activePill.classList.add('text-white', 'bg-apple-card', 'shadow-apple-sm');
+      }
+
+      // Update Mobile Pills
+      ['sqli', 'xss', 'ssrf'].forEach(k => {
+        const mobBtn = document.getElementById(`mob-pill-${k}`);
+        if (mobBtn) {
+          if (k === key) {
+            mobBtn.className = 'px-2.5 py-1 text-xs rounded-md bg-apple-card text-white font-medium';
+          } else {
+            mobBtn.className = 'px-2.5 py-1 text-xs rounded-md text-apple-muted';
+          }
+        }
+      });
+
+      // Update Incident Hero
+      document.getElementById('badge-severity').className = `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${s.severityBg}`;
+      document.getElementById('badge-severity').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-current mr-1.5 animate-pulse"></span>${s.severity}`;
+      document.getElementById('badge-file').textContent = s.file;
+      document.getElementById('incident-title').textContent = s.title;
+      document.getElementById('incident-desc').textContent = s.desc;
+
+      // Update Telemetry
+      document.getElementById('stat-time').textContent = s.time;
+      document.getElementById('stat-constraints').textContent = s.constraints;
+      document.getElementById('stat-regressions').textContent = s.regressions;
+
+      // Update Diff
+      document.getElementById('diff-filename').textContent = s.filename;
+      document.getElementById('code-before').innerHTML = s.beforeCode;
+      document.getElementById('code-after').innerHTML = s.afterCode;
+      document.getElementById('code-unified').innerHTML = s.unifiedCode;
+
+      // Update Z3 Tab
+      document.getElementById('z3-formula').textContent = s.formula;
+      document.getElementById('z3-smt-code').textContent = s.smtCode;
+
+      // Toast feedback
+      showToast(`Switched scenario to ${key.toUpperCase()}`);
+    }
+
+    // DIFF VIEW TOGGLE (SPLIT vs UNIFIED)
+    function setDiffView(mode) {
+      const splitView = document.getElementById('diff-split-view');
+      const unifiedView = document.getElementById('diff-unified-view');
+      const btnSplit = document.getElementById('btn-view-split');
+      const btnUnified = document.getElementById('btn-view-unified');
+
+      if (mode === 'split') {
+        splitView.classList.remove('hidden');
+        unifiedView.classList.add('hidden');
+        btnSplit.classList.add('text-white', 'bg-apple-card', 'shadow-sm');
+        btnSplit.classList.remove('text-apple-muted');
+        btnUnified.classList.remove('text-white', 'bg-apple-card', 'shadow-sm');
+        btnUnified.classList.add('text-apple-muted');
+      } else {
+        splitView.classList.add('hidden');
+        unifiedView.classList.remove('hidden');
+        btnUnified.classList.add('text-white', 'bg-apple-card', 'shadow-sm');
+        btnUnified.classList.remove('text-apple-muted');
+        btnSplit.classList.remove('text-white', 'bg-apple-card', 'shadow-sm');
+        btnSplit.classList.add('text-apple-muted');
+      }
+    }
+
+    // TAB SWITCHING (PROGRESSIVE DISCLOSURE)
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('text-cyan-400', 'border-cyan-400');
+        btn.classList.add('text-apple-muted', 'border-transparent');
+      });
+
+      const targetContent = document.getElementById(`tab-content-${tabId}`);
+      const targetBtn = document.getElementById(`tab-btn-${tabId}`);
+      if (targetContent) targetContent.classList.remove('hidden');
+      if (targetBtn) {
+        targetBtn.classList.remove('text-apple-muted', 'border-transparent');
+        targetBtn.classList.add('text-cyan-400', 'border-cyan-400');
+      }
+    }
+
+    // COPY PATCH TO CLIPBOARD
+    function copyPatchToClipboard() {
+      const patch = scenarios[activeScenarioKey].rawPatch;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(patch).then(() => {
+          showToast("Unified patch copied to clipboard");
+        }).catch(() => fallbackCopy(patch));
+      } else {
+        fallbackCopy(patch);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      showToast("Unified patch copied to clipboard");
+    }
+
+    // DOWNLOAD PATCH FILE
+    function downloadPatchFile() {
+      const patch = scenarios[activeScenarioKey].rawPatch;
+      const blob = new Blob([patch], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `aegis-${activeScenarioKey}-patch.diff`;
+      a.click();
+      showToast(`Downloaded aegis-${activeScenarioKey}-patch.diff`);
+    }
+
+    // TOAST NOTIFICATION CAPSULE
+    let toastTimeout = null;
+    function showToast(msg) {
+      const toast = document.getElementById('toast-container');
+      const toastMsg = document.getElementById('toast-message');
+      toastMsg.textContent = msg;
+
+      toast.classList.remove('opacity-0', '-translate-y-3');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', '-translate-y-3');
+      }, 2400);
+    }
+
+    // RE-VERIFY SOLVER SIMULATION
+    let isVerifying = false;
+    function runVerificationAnimation() {
+      if (isVerifying) return;
+      isVerifying = true;
+      const icon = document.getElementById('reverify-icon');
+      const text = document.getElementById('reverify-text');
+
+      icon.classList.add('animate-spin');
+      text.textContent = 'Solving Z3 SMT...';
+
+      setTimeout(() => {
+        icon.classList.remove('animate-spin');
+        text.textContent = 'Re-Verify Z3';
+        isVerifying = false;
+        showToast("✓ Invariant Proven: UNSAT (0 counterexamples)");
+      }, 1200);
+    }
+
+    // TEST SIMULATION
+    function runTestSimulation() {
+      const btn = document.getElementById('btn-run-tests');
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 text-cyan-400 animate-spin"></i><span>Executing 42 Tests...</span>`;
+      lucide.createIcons();
+
+      setTimeout(() => {
+        btn.innerHTML = `<i data-lucide="play" class="w-3.5 h-3.5 text-emerald-400"></i><span>Re-run Suite</span>`;
+        lucide.createIcons();
+        showToast("✓ 42/42 Tests Passed (0 Regressions)");
+      }, 900);
+    }
+
+    // MERGE PR MODAL CONTROLS
+    function openMergeModal() {
+      const modal = document.getElementById('merge-modal');
+      const card = document.getElementById('merge-modal-card');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      card.classList.remove('scale-95');
+      card.classList.add('scale-100');
+    }
+
+    function closeMergeModal() {
+      const modal = document.getElementById('merge-modal');
+      const card = document.getElementById('merge-modal-card');
+      card.classList.remove('scale-100');
+      card.classList.add('scale-95');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+
+      // Reset modal state
+      setTimeout(() => {
+        document.getElementById('modal-content-pending').classList.remove('hidden');
+        document.getElementById('modal-content-success').classList.add('hidden');
+      }, 300);
+    }
+
+    function executeMergeAction() {
+      const btn = document.getElementById('btn-confirm-merge');
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin mr-1"></i> Merging to main...`;
+      lucide.createIcons();
+
+      setTimeout(() => {
+        document.getElementById('modal-content-pending').classList.add('hidden');
+        document.getElementById('modal-content-success').classList.remove('hidden');
+        document.getElementById('btn-merge-pr').innerHTML = `<i data-lucide="check-check" class="w-3.5 h-3.5"></i><span>PR #142 Merged</span>`;
+        document.getElementById('btn-merge-pr').classList.remove('bg-emerald-500', 'hover:bg-emerald-400');
+        document.getElementById('btn-merge-pr').classList.add('bg-white/10', 'text-apple-muted', 'cursor-default');
+        document.getElementById('btn-merge-pr').onclick = null;
+        lucide.createIcons();
+        showToast("✓ PR #142 successfully merged into main");
+      }, 1100);
+    }
+  </script>
+</body>
+</html>
