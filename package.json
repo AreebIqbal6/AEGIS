@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "analyze": "ts-node src/analyzer/cli.ts",
-    "test": "node dist/analyzer/test-runner.js"
+    "analyze": "tsc && node dist/index.js",
+    "test": "node dist/index.js"
   },
   "keywords": [
     "security",
