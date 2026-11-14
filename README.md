@@ -68,7 +68,8 @@ AEGIS features a calm, progressive-disclosure dashboard designed according to **
   <img src="./dashboard/preview.png" alt="AEGIS Apple Design Telemetry Dashboard" style="border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);" width="100%" />
 </div>
 
-* **Interactive Single-Page App:** Open [`dashboard/index.html`](./dashboard/index.html) in your browser.
+* **Live Public Web App:** [https://areebiqbal6.github.io/AEGIS/](https://areebiqbal6.github.io/AEGIS/)
+* **Local Offline File:** Open [`dashboard/index.html`](./dashboard/index.html) in any browser.
 
 ---
 
