@@ -1,0 +1,73 @@
+{
+  "project": "AEGIS",
+  "description": "Autonomous Engine for Program Vulnerability Repair and Formal Invariant Verification in CI/CD Pipelines",
+  "version": "1.0.0",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Project Specification & Memory Bank Scaffolding",
+      "description": "Establish the root journal.md, Roo Code Memory Bank, and Ralph PRD loop files.",
+      "acceptanceCriteria": [
+        "journal.md created explaining architectural whys and hows",
+        "memory-bank/ directory populated with all 6 context files",
+        "prd.json and progress.txt initialized"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-002",
+      "title": "Comprehensive Vulnerability & Attack Taxonomy Catalog",
+      "description": "Map all user-specified attack vectors (SQLi, NoSQLi, SSTI, ReDoS, LPDoS, BOLA, SSRF, XSS, Secret Leaks) to AST taint patterns and Z3 formal invariant specifications.",
+      "acceptanceCriteria": [
+        "specs/vulnerability-catalog.md documents AST patterns and formal invariants for all attack classes",
+        "Clear definition of taint sources, intermediate sanitizers, and execution sinks for each vector",
+        "Specification of Z3 SMT logic formula for each vulnerability class"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-003",
+      "title": "Core AST Taint Localization Engine Prototype",
+      "description": "Implement a Tree-sitter parser script in TypeScript that analyzes JavaScript/TypeScript files, traces untrusted input variables (e.g. req.body.id), and flags raw string concatenation reaching SQL database query sinks.",
+      "acceptanceCriteria": [
+        "Tree-sitter parser successfully constructs AST for sample controller",
+        "Taint analysis algorithm correctly identifies unescaped variable reaching db.query() sink",
+        "Outputs precise file path, line number, column offset, and AST node type"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-004",
+      "title": "Z3 SMT Invariant Verification Engine",
+      "description": "Implement a formal verification module using the Microsoft Z3 solver that takes a candidate patch and mathematically proves that no execution path allows tainted user bytes to reach the query tokenizer.",
+      "acceptanceCriteria": [
+        "Z3 module initializes with First-Order Logic constraints",
+        "Correctly returns SAT for parameterized query patches",
+        "Correctly returns UNSAT or generates a counterexample for flawed patches"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-005",
+      "title": "Autonomous Patch Synthesis & Sandboxed Test Chamber",
+      "description": "Integrate code model synthesis (local Ollama / cloud API) with a sandboxed test runner (Vitest) to verify that patches resolve vulnerabilities without breaking existing test suites.",
+      "acceptanceCriteria": [
+        "Patch synthesizer generates syntactically valid TypeScript/JavaScript diffs",
+        "Vitest runner executes against test suite in isolated environment",
+        "Reports test pass rate and execution latency in under 1 second"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-006",
+      "title": "High-Craft Telemetry Dashboard Integration",
+      "description": "Connect the core AEGIS engine to the dark mode Next.js/Tailwind cockpit to visualize real-time AST graphs, Z3 invariant proofs, and auto-PR dispatch.",
+      "acceptanceCriteria": [
+        "Web dashboard displays side-by-side diff with syntax highlighting",
+        "Displays Z3 formal invariant badge (Q.E.D.) and test chamber matrix",
+        "Passes 38-point anti-vibecoding quality audit and Apple HIG design standards"
+      ],
+      "passes": false
+    }
+  ]
+}

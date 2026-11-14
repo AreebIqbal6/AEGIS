@@ -1,0 +1,33 @@
+{
+  "name": "aegis-core",
+  "version": "1.0.0",
+  "description": "Autonomous Engine for Program Vulnerability Repair and Formal Invariant Verification in CI/CD Pipelines",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "analyze": "ts-node src/analyzer/cli.ts",
+    "test": "node dist/analyzer/test-runner.js"
+  },
+  "keywords": [
+    "security",
+    "ast",
+    "formal-verification",
+    "automated-program-repair",
+    "devsecops",
+    "z3-smt"
+  ],
+  "author": "Areeb Iqbal",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/parser": "^7.26.0",
+    "@babel/traverse": "^7.26.0",
+    "@babel/generator": "^7.26.0",
+    "@babel/types": "^7.26.0"
+  },
+  "devDependencies": {
+    "@types/babel__generator": "^7.6.8",
+    "@types/babel__traverse": "^7.20.6",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  }
+}

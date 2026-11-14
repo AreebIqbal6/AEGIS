@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEGIS — Clean Monolith Logo</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #09090b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, sans-serif;
+      color: #f4f4f5;
+    }
+    .container {
+      width: 100%;
+      max-width: 520px;
+      padding: 2rem;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    svg {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.8));
+    }
+    .note {
+      margin-top: 2rem;
+      font-size: 13px;
+      color: #71717a;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Embedded Clean Vector SVG -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+      <defs>
+        <filter id="emeraldGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="8" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+
+      <!-- The Two Monolithic Plates (Left & Right Chevrons) -->
+      <g transform="translate(250, 195)">
+        <!-- Left Plate -->
+        <path d="M -6 -100 
+                 L -85 -55 
+                 L -85 25 
+                 C -85 85, -45 130, -6 150
+                 L -6 80 
+                 C -30 65, -45 35, -45 15 
+                 L -45 -25 
+                 L -6 -50 Z" 
+              fill="#ffffff"/>
+
+        <!-- Right Plate -->
+        <path d="M 6 -100 
+                 L 85 -55 
+                 L 85 25 
+                 C 85 85, 45 130, 6 150
+                 L 6 80 
+                 C 30 65, 45 35, 45 15 
+                 L 45 -25 
+                 L 6 -50 Z" 
+              fill="#ffffff"/>
+
+        <!-- Central Emerald Invariant Core -->
+        <polygon points="0,-12 18,22 -18,22" fill="#10b981" filter="url(#emeraldGlow)"/>
+      </g>
+
+      <!-- Wordmark -->
+      <text x="250" y="415" 
+            text-anchor="middle" 
+            font-family="system-ui, -apple-system, 'Inter', 'Geist', sans-serif" 
+            font-size="44" 
+            font-weight="800" 
+            letter-spacing="0.28em" 
+            fill="#ffffff">AEGIS</text>
+
+      <text x="250" y="445" 
+            text-anchor="middle" 
+            font-family="'Consolas', 'JetBrains Mono', monospace" 
+            font-size="11" 
+            font-weight="600" 
+            letter-spacing="0.22em" 
+            fill="#71717a">AUTONOMOUS SOFTWARE IMMUNITY</text>
+    </svg>
+
+    <div class="note">
+      Two solid architectural plates. One hairline slit. One emerald core. Zero spiderwebs.
+    </div>
+  </div>
+</body>
+</html>
