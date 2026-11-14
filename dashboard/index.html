@@ -82,6 +82,10 @@
     }
 
     /* Button tap micro-interaction */
+    .tap-effect {
+      cursor: pointer;
+      user-select: none;
+    }
     .tap-effect:active {
       transform: scale(0.975);
     }
@@ -110,9 +114,9 @@
   <header class="sticky top-0 z-40 glass-material border-b border-white/[0.08] px-4 lg:px-8 py-3">
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
       
-      <!-- LOGO & BRAND IDENTITY -->
+      <!-- LOGO & BRAND IDENTITY (CLICKABLE) -->
       <div class="flex items-center space-x-4">
-        <a href="#" class="flex items-center space-x-3 group tap-effect">
+        <button onclick="handleLogoClick()" class="flex items-center space-x-3 group tap-effect focus:outline-none" title="AEGIS Kernel — Click to return home">
           <img src="logo-cutout.png" alt="AEGIS Logo" class="h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-105" onerror="this.style.display='none'; document.getElementById('logo-fallback').classList.remove('hidden');" />
           <div id="logo-fallback" class="hidden flex items-center space-x-2">
             <div class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold">
@@ -120,39 +124,49 @@
             </div>
             <span class="font-bold text-lg tracking-wider text-white">AEGIS</span>
           </div>
-        </a>
+        </button>
         <div class="hidden sm:flex items-center space-x-2 border-l border-white/10 pl-3">
-          <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-mono font-medium">v1.0-pure-smt</span>
+          <button onclick="openEngineSpecsModal()" class="tap-effect text-xs px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 border border-cyan-500/20 font-mono font-medium flex items-center space-x-1 transition-colors" title="View Z3 & Compiler Engine Architecture">
+            <span>v1.0-pure-smt</span>
+            <i data-lucide="info" class="w-3 h-3 ml-0.5"></i>
+          </button>
           <span class="text-xs text-apple-muted hidden md:inline">Formal Verification Engine</span>
         </div>
       </div>
 
       <!-- CENTER: SCENARIO SELECTOR (APPLE SEGMENTED PILL) -->
       <div class="hidden md:flex items-center bg-black/40 p-1 rounded-xl border border-white/10 shadow-inner">
-        <button onclick="switchScenario('sqli')" id="pill-sqli" class="scenario-pill flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-medium text-white bg-apple-card shadow-apple-sm transition-all tap-effect">
+        <button onclick="switchScenario('sqli')" id="pill-sqli" class="scenario-pill flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-white bg-apple-card shadow-apple-sm transition-all tap-effect">
           <i data-lucide="database" class="w-3.5 h-3.5 text-rose-400"></i>
           <span>CWE-89: SQLi</span>
         </button>
-        <button onclick="switchScenario('xss')" id="pill-xss" class="scenario-pill flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-medium text-apple-muted hover:text-white transition-all tap-effect">
+        <button onclick="switchScenario('xss')" id="pill-xss" class="scenario-pill flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-apple-muted hover:text-white transition-all tap-effect">
           <i data-lucide="code-2" class="w-3.5 h-3.5 text-amber-400"></i>
           <span>CWE-79: XSS</span>
         </button>
-        <button onclick="switchScenario('ssrf')" id="pill-ssrf" class="scenario-pill flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-medium text-apple-muted hover:text-white transition-all tap-effect">
+        <button onclick="switchScenario('ssrf')" id="pill-ssrf" class="scenario-pill flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-apple-muted hover:text-white transition-all tap-effect">
           <i data-lucide="network" class="w-3.5 h-3.5 text-cyan-400"></i>
           <span>CWE-918: SSRF</span>
         </button>
       </div>
 
       <!-- RIGHT CONTROLS -->
-      <div class="flex items-center space-x-3">
+      <div class="flex items-center space-x-2.5">
+        
+        <!-- Live Exploit Simulator Trigger -->
+        <button onclick="openExploitSimulatorModal()" class="tap-effect hidden lg:flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 transition-colors" title="Simulate real exploit execution against before vs after code">
+          <i data-lucide="skull" class="w-3.5 h-3.5 text-rose-400"></i>
+          <span>Test Exploit</span>
+        </button>
+
         <!-- Re-verify Solver Action Button -->
-        <button onclick="runVerificationAnimation()" id="btn-reverify" class="tap-effect flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-apple-text border border-white/10 transition-colors">
+        <button onclick="runVerificationAnimation()" id="btn-reverify" class="tap-effect flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-apple-text border border-white/10 transition-colors" title="Trigger Z3 SMT constraint verification">
           <i id="reverify-icon" data-lucide="refresh-cw" class="w-3.5 h-3.5 text-cyan-400"></i>
           <span id="reverify-text">Re-Verify Z3</span>
         </button>
 
         <!-- Merge PR Button -->
-        <button onclick="openMergeModal()" id="btn-merge-pr" class="tap-effect flex items-center space-x-2 px-4 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-glow-emerald transition-all">
+        <button onclick="openMergeModal()" id="btn-merge-pr" class="tap-effect flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-glow-emerald transition-all" title="Merge formally proven hotfix PR into main">
           <i data-lucide="git-merge" class="w-3.5 h-3.5"></i>
           <span>Merge PR #142</span>
         </button>
@@ -168,9 +182,9 @@
     <div class="flex md:hidden items-center justify-between mt-3 pt-3 border-t border-white/10">
       <span class="text-xs text-apple-muted font-medium">Scenario:</span>
       <div class="flex space-x-1">
-        <button onclick="switchScenario('sqli')" id="mob-pill-sqli" class="px-2.5 py-1 text-xs rounded-md bg-apple-card text-white">SQLi</button>
-        <button onclick="switchScenario('xss')" id="mob-pill-xss" class="px-2.5 py-1 text-xs rounded-md text-apple-muted">XSS</button>
-        <button onclick="switchScenario('ssrf')" id="mob-pill-ssrf" class="px-2.5 py-1 text-xs rounded-md text-apple-muted">SSRF</button>
+        <button onclick="switchScenario('sqli')" id="mob-pill-sqli" class="tap-effect px-2.5 py-1 text-xs rounded-md bg-apple-card text-white font-medium">SQLi</button>
+        <button onclick="switchScenario('xss')" id="mob-pill-xss" class="tap-effect px-2.5 py-1 text-xs rounded-md text-apple-muted">XSS</button>
+        <button onclick="switchScenario('ssrf')" id="mob-pill-ssrf" class="tap-effect px-2.5 py-1 text-xs rounded-md text-apple-muted">SSRF</button>
       </div>
     </div>
   </header>
@@ -178,24 +192,29 @@
   <!-- MAIN VIEWPORT CONTAINER -->
   <main class="max-w-7xl mx-auto px-4 lg:px-8 py-6 space-y-6">
 
-    <!-- INCIDENT HERO CARD (CALM & INFORMATIVE) -->
+    <!-- INCIDENT HERO CARD (CALM, INFORMATIVE, CLICKABLE CHIPS) -->
     <section class="glass-material rounded-2xl p-5 lg:p-6 shadow-apple-md relative overflow-hidden border border-white/[0.08]">
       <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         
         <!-- Left: Incident Overview -->
-        <div class="space-y-2">
-          <div class="flex flex-wrap items-center gap-2.5">
-            <span id="badge-severity" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+        <div class="space-y-2.5">
+          <div class="flex flex-wrap items-center gap-2">
+            <!-- CVSS Badge (Clickable -> Opens Breakdown Modal) -->
+            <button onclick="openCvssModal()" id="badge-severity" class="tap-effect inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20 hover:bg-rose-500/20 transition-colors" title="Click for CVSS v3.1 vector breakdown">
               <span class="w-1.5 h-1.5 rounded-full bg-rose-500 mr-1.5 animate-pulse"></span>
               CRITICAL SEVERITY (CVSS 9.8)
-            </span>
-            <span id="badge-file" class="text-xs font-mono text-apple-muted bg-white/5 px-2.5 py-0.5 rounded-md border border-white/5">
+            </button>
+            
+            <!-- File Location Badge (Clickable -> Jumps to Diff) -->
+            <button onclick="jumpToDiff()" id="badge-file" class="tap-effect text-xs font-mono text-apple-muted bg-white/5 hover:bg-white/10 hover:text-white px-2.5 py-0.5 rounded-md border border-white/5 transition-colors" title="Jump to diff in editor">
               controllers/auth.ts:42
-            </span>
-            <span class="text-xs text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 flex items-center">
+            </button>
+
+            <!-- Formal Status Badge (Clickable -> Switches to Z3 Tab) -->
+            <button onclick="switchTab('z3')" class="tap-effect text-xs text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 px-2.5 py-0.5 rounded-full border border-emerald-500/20 flex items-center transition-colors" title="Inspect Z3 SMT Mathematical Invariant">
               <i data-lucide="shield-check" class="w-3.5 h-3.5 mr-1"></i>
               Formal Invariant Verified (Q.E.D.)
-            </span>
+            </button>
           </div>
 
           <h1 id="incident-title" class="text-xl lg:text-2xl font-bold tracking-tight text-white">
@@ -207,53 +226,70 @@
           </p>
         </div>
 
-        <!-- Right: Telemetry Mini-Stat Strip -->
+        <!-- Right: Telemetry Mini-Stat Strip (EVERY CHIP IS CLICKABLE) -->
         <div class="flex items-center gap-3 shrink-0 lg:border-l lg:border-white/10 lg:pl-6">
-          <div class="bg-black/30 rounded-xl p-3 border border-white/5 text-center min-w-[90px]">
-            <div class="text-xs text-apple-muted mb-0.5">Repair Time</div>
+          <button onclick="runVerificationAnimation()" class="tap-effect bg-black/30 hover:bg-white/5 transition-colors rounded-xl p-3 border border-white/5 text-center min-w-[90px]" title="Click to re-benchmark repair time">
+            <div class="text-[11px] text-apple-muted mb-0.5 flex items-center justify-center">
+              <span>Repair Time</span>
+              <i data-lucide="play" class="w-2.5 h-2.5 ml-1 text-cyan-400"></i>
+            </div>
             <div id="stat-time" class="text-base font-semibold font-mono text-cyan-400">44.4 ms</div>
-          </div>
-          <div class="bg-black/30 rounded-xl p-3 border border-white/5 text-center min-w-[90px]">
-            <div class="text-xs text-apple-muted mb-0.5">Constraints</div>
+          </button>
+          
+          <button onclick="switchTab('z3')" class="tap-effect bg-black/30 hover:bg-white/5 transition-colors rounded-xl p-3 border border-white/5 text-center min-w-[90px]" title="Click to view Z3 Invariant Proof">
+            <div class="text-[11px] text-apple-muted mb-0.5 flex items-center justify-center">
+              <span>Constraints</span>
+              <i data-lucide="external-link" class="w-2.5 h-2.5 ml-1 text-emerald-400"></i>
+            </div>
             <div id="stat-constraints" class="text-base font-semibold font-mono text-emerald-400">1,428 SAT</div>
-          </div>
-          <div class="bg-black/30 rounded-xl p-3 border border-white/5 text-center min-w-[90px]">
-            <div class="text-xs text-apple-muted mb-0.5">Regressions</div>
+          </button>
+
+          <button onclick="switchTab('tests')" class="tap-effect bg-black/30 hover:bg-white/5 transition-colors rounded-xl p-3 border border-white/5 text-center min-w-[90px]" title="Click to view Regression Test Chamber">
+            <div class="text-[11px] text-apple-muted mb-0.5 flex items-center justify-center">
+              <span>Regressions</span>
+              <i data-lucide="external-link" class="w-2.5 h-2.5 ml-1 text-white"></i>
+            </div>
             <div id="stat-regressions" class="text-base font-semibold font-mono text-white">0 / 42</div>
-          </div>
+          </button>
         </div>
 
       </div>
     </section>
 
     <!-- PRIMARY STAGE: CODE SURGERY DIFF VIEWER -->
-    <section class="glass-material rounded-2xl overflow-hidden shadow-apple-md border border-white/[0.08]">
+    <section id="diff-section" class="glass-material rounded-2xl overflow-hidden shadow-apple-md border border-white/[0.08]">
       
       <!-- Diff Toolbar -->
       <div class="bg-apple-card/60 px-4 lg:px-6 py-3 border-b border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
         
-        <!-- Left: File Indicator -->
-        <div class="flex items-center space-x-2.5">
+        <!-- Left: File Indicator (Clickable to copy file path) -->
+        <button onclick="copyFilePath()" class="tap-effect flex items-center space-x-2.5 hover:text-cyan-300 transition-colors" title="Click to copy file path">
           <i data-lucide="file-code-2" class="w-4 h-4 text-cyan-400"></i>
           <span id="diff-filename" class="text-xs font-mono font-medium text-white">controllers/auth.ts</span>
-          <span class="text-xs font-mono text-apple-muted bg-white/5 px-2 py-0.5 rounded border border-white/5">+1 / -1 lines</span>
-        </div>
+          <span id="diff-lines-badge" class="text-xs font-mono text-apple-muted bg-white/5 px-2 py-0.5 rounded border border-white/5">+1 / -1 lines</span>
+        </button>
 
-        <!-- Center / Right: Controls (Side-by-side vs Unified & Copy) -->
-        <div class="flex items-center space-x-3">
+        <!-- Center / Right: Interactive Controls -->
+        <div class="flex items-center space-x-2.5">
           
           <!-- View Toggle Segmented Control -->
           <div class="bg-black/40 p-0.5 rounded-lg border border-white/10 flex text-xs">
-            <button onclick="setDiffView('split')" id="btn-view-split" class="px-2.5 py-1 rounded-md font-medium text-white bg-apple-card shadow-sm transition-all tap-effect">
+            <button onclick="setDiffView('split')" id="btn-view-split" class="tap-effect px-2.5 py-1 rounded-md font-medium text-white bg-apple-card shadow-sm transition-all">
               Side-by-Side
             </button>
-            <button onclick="setDiffView('unified')" id="btn-view-unified" class="px-2.5 py-1 rounded-md font-medium text-apple-muted hover:text-white transition-all tap-effect">
+            <button onclick="setDiffView('unified')" id="btn-view-unified" class="tap-effect px-2.5 py-1 rounded-md font-medium text-apple-muted hover:text-white transition-all">
               Unified Diff
             </button>
           </div>
 
+          <!-- Highlight Taint Toggle -->
+          <button onclick="toggleTaintHighlight()" id="btn-toggle-taint" class="tap-effect flex items-center space-x-1.5 px-3 py-1 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-apple-text border border-white/10 transition-colors" title="Toggle AST Taint Highlight Overlay">
+            <i data-lucide="highlighter" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span id="taint-toggle-text">Highlight Taint</span>
+          </button>
+
           <!-- Copy Patch Button -->
-          <button onclick="copyPatchToClipboard()" class="tap-effect flex items-center space-x-1.5 px-3 py-1 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-apple-text border border-white/10 transition-colors">
+          <button onclick="copyPatchToClipboard()" class="tap-effect flex items-center space-x-1.5 px-3 py-1 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-apple-text border border-white/10 transition-colors" title="Copy unified patch diff to clipboard">
             <i data-lucide="copy" class="w-3.5 h-3.5 text-apple-muted"></i>
             <span>Copy Patch</span>
           </button>
@@ -310,7 +346,7 @@ async function authenticateUser(req: Request, res: Response) {
         <!-- UNIFIED DIFF VIEW (HIDDEN BY DEFAULT) -->
         <div id="diff-unified-view" class="hidden rounded-xl border border-white/10 bg-black/40 overflow-hidden">
           <div class="bg-white/5 px-3 py-2 border-b border-white/10 flex items-center justify-between text-apple-muted">
-            <span>--- a/controllers/auth.ts &nbsp;&nbsp; +++ b/controllers/auth.ts</span>
+            <span id="unified-header-label">--- a/controllers/auth.ts &nbsp;&nbsp; +++ b/controllers/auth.ts</span>
             <span class="text-[10px] font-mono">@@ -40,5 +40,5 @@</span>
           </div>
           <pre class="p-4 text-apple-text/90 leading-relaxed overflow-x-auto"><code id="code-unified">@@ -40,5 +40,5 @@ async function authenticateUser(req: Request, res: Response) {
@@ -338,7 +374,7 @@ async function authenticateUser(req: Request, res: Response) {
         </button>
         <button onclick="switchTab('tests')" id="tab-btn-tests" class="tab-button py-3.5 px-3 lg:px-4 text-xs font-medium text-apple-muted hover:text-white border-b-2 border-transparent flex items-center space-x-2 transition-all tap-effect">
           <i data-lucide="flask-conical" class="w-4 h-4"></i>
-          <span>Regression Chamber (42/42)</span>
+          <span id="tab-label-tests">Regression Chamber (42/42)</span>
         </button>
         <button onclick="switchTab('ast')" id="tab-btn-ast" class="tab-button py-3.5 px-3 lg:px-4 text-xs font-medium text-apple-muted hover:text-white border-b-2 border-transparent flex items-center space-x-2 transition-all tap-effect">
           <i data-lucide="git-fork" class="w-4 h-4"></i>
@@ -359,7 +395,7 @@ async function authenticateUser(req: Request, res: Response) {
               ∀ input x ∈ Strings, TaintedSource(x) ∧ RawQuerySink = ∅ &nbsp;⇒&nbsp; ValidSyntaxTree(Ast) ≡ Constant
             </div>
           </div>
-          <div class="flex items-center space-x-3 shrink-0">
+          <div class="flex items-center space-x-2 shrink-0">
             <span class="text-xs px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-medium">
               Theorem Status: UNSAT (Q.E.D.)
             </span>
@@ -374,7 +410,14 @@ async function authenticateUser(req: Request, res: Response) {
           <div class="lg:col-span-2 bg-[#070A10] p-4 rounded-xl border border-white/5 font-mono text-xs overflow-x-auto">
             <div class="text-[11px] text-apple-muted mb-2 pb-2 border-b border-white/5 flex items-center justify-between">
               <span>smt-lib2 specification output</span>
-              <span>Z3 Prover v4.12.2</span>
+              <div class="flex items-center space-x-2">
+                <button onclick="copySmtLibCode()" class="tap-effect text-cyan-400 hover:text-cyan-300 text-[10px] flex items-center space-x-1" title="Copy SMT-LIB2 script to clipboard">
+                  <i data-lucide="copy" class="w-3 h-3"></i>
+                  <span>Copy SMT2</span>
+                </button>
+                <span class="text-white/20">|</span>
+                <span>Z3 Prover v4.12.2</span>
+              </div>
             </div>
             <pre class="text-slate-300 leading-relaxed"><code id="z3-smt-code">; AEGIS Invariant Specification for Parameterized Query
 (set-logic QF_S)
@@ -394,25 +437,28 @@ async function authenticateUser(req: Request, res: Response) {
 ; Result: unsat (No execution path allows user input to break syntax barrier)</code></pre>
           </div>
 
-          <!-- Proof Metrics -->
+          <!-- Proof Metrics (Interactive Solver Diagnostics) -->
           <div class="bg-black/30 p-4 rounded-xl border border-white/5 space-y-3">
-            <div class="text-xs font-semibold text-white uppercase tracking-wider">Solver Diagnostics</div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-white uppercase tracking-wider">Solver Diagnostics</span>
+              <button onclick="openSolverTraceModal()" class="tap-effect text-[11px] text-cyan-400 hover:underline">View Trace</button>
+            </div>
             <div class="space-y-2 text-xs">
               <div class="flex justify-between py-1 border-b border-white/5">
                 <span class="text-apple-muted">Theory Logic</span>
-                <span class="font-mono text-white">QF_S (Quantifier-Free Strings)</span>
+                <span id="stat-theory" class="font-mono text-white">QF_S (Quantifier-Free Strings)</span>
               </div>
               <div class="flex justify-between py-1 border-b border-white/5">
                 <span class="text-apple-muted">Search Depth</span>
-                <span class="font-mono text-white">Inductive Step k=3</span>
+                <span id="stat-depth" class="font-mono text-white">Inductive Step k=3</span>
               </div>
               <div class="flex justify-between py-1 border-b border-white/5">
                 <span class="text-apple-muted">Clause Iterations</span>
-                <span class="font-mono text-white">1,428 clauses</span>
+                <span id="stat-clauses" class="font-mono text-white">1,428 clauses</span>
               </div>
               <div class="flex justify-between py-1 border-b border-white/5">
                 <span class="text-apple-muted">Peak Resident Memory</span>
-                <span class="font-mono text-white">18.4 MB</span>
+                <span id="stat-memory" class="font-mono text-white">18.4 MB</span>
               </div>
               <div class="flex justify-between py-1">
                 <span class="text-apple-muted">Proof Refutation</span>
@@ -423,100 +469,78 @@ async function authenticateUser(req: Request, res: Response) {
         </div>
       </div>
 
-      <!-- TAB 2: REGRESSION TEST CHAMBER -->
+      <!-- TAB 2: REGRESSION TEST CHAMBER (INTERACTIVE TEST LIST) -->
       <div id="tab-content-tests" class="tab-content hidden p-5 lg:p-6 space-y-4">
-        <div class="flex items-center justify-between bg-black/30 p-4 rounded-xl border border-white/5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-black/30 p-4 rounded-xl border border-white/5">
           <div class="space-y-1">
             <div class="text-sm font-semibold text-white flex items-center">
               <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 mr-2"></i>
-              All 42 Regression Test Cases Passing (100%)
+              <span id="test-summary-title">All 42 Regression Test Cases Passing (100%)</span>
             </div>
-            <div class="text-xs text-apple-muted">No functional behavior or API response schemas broken by the patch.</div>
+            <div class="text-xs text-apple-muted">Click any test case to view assertion payload and execution logs.</div>
           </div>
-          <button onclick="runTestSimulation()" id="btn-run-tests" class="tap-effect px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-white border border-white/10 flex items-center space-x-1.5">
-            <i data-lucide="play" class="w-3.5 h-3.5 text-emerald-400"></i>
-            <span>Re-run Suite</span>
-          </button>
+          <div class="flex items-center space-x-2">
+            <button onclick="filterTests('all')" id="btn-filter-all" class="tap-effect px-2.5 py-1 rounded text-xs bg-apple-card text-white border border-white/10">All (4)</button>
+            <button onclick="filterTests('security')" id="btn-filter-sec" class="tap-effect px-2.5 py-1 rounded text-xs text-apple-muted hover:text-white border border-transparent">Security</button>
+            <button onclick="runTestSimulation()" id="btn-run-tests" class="tap-effect px-3.5 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/20 flex items-center space-x-1.5 transition-colors">
+              <i data-lucide="play" class="w-3.5 h-3.5 text-emerald-400"></i>
+              <span>Re-run Suite</span>
+            </button>
+          </div>
         </div>
 
         <div class="space-y-2 font-mono text-xs" id="test-chamber-list">
-          <div class="flex items-center justify-between p-3 rounded-lg bg-black/20 border border-white/5">
-            <div class="flex items-center space-x-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
-              <span class="text-white">auth.test.ts: should prevent single quote SQL escape</span>
-            </div>
-            <span class="text-apple-muted">12 ms</span>
-          </div>
-          <div class="flex items-center justify-between p-3 rounded-lg bg-black/20 border border-white/5">
-            <div class="flex items-center space-x-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
-              <span class="text-white">auth.test.ts: should authenticate valid admin user</span>
-            </div>
-            <span class="text-apple-muted">8 ms</span>
-          </div>
-          <div class="flex items-center justify-between p-3 rounded-lg bg-black/20 border border-white/5">
-            <div class="flex items-center space-x-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
-              <span class="text-white">payments.test.ts: backward compatibility integration suite</span>
-            </div>
-            <span class="text-apple-muted">34 ms</span>
-          </div>
-          <div class="flex items-center justify-between p-3 rounded-lg bg-black/20 border border-white/5">
-            <div class="flex items-center space-x-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
-              <span class="text-white">security_fuzz.test.ts: 10,000 automated fuzz mutations</span>
-            </div>
-            <span class="text-apple-muted">56 ms</span>
-          </div>
+          <!-- Test items populated dynamically -->
         </div>
       </div>
 
-      <!-- TAB 3: AST TAINT FLOW -->
+      <!-- TAB 3: AST TAINT FLOW (CLICKABLE PIPELINE STEPS) -->
       <div id="tab-content-ast" class="tab-content hidden p-5 lg:p-6 space-y-4">
-        <div class="text-xs text-apple-muted mb-2">
-          Tree-sitter Abstract Syntax Tree (AST) Source-to-Sink Taint Propagation Graph:
+        <div class="flex items-center justify-between text-xs text-apple-muted mb-2">
+          <span>Tree-sitter Concrete Syntax Tree (CST) Source-to-Sink Taint Propagation Graph:</span>
+          <span class="text-cyan-400 font-mono">Click any step to inspect AST node tokens</span>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-3 font-mono text-xs">
-          <!-- Step 1 -->
-          <div class="bg-black/30 p-3.5 rounded-xl border border-white/5 space-y-2">
+          <!-- Step 1 (Clickable) -->
+          <button onclick="inspectAstStep(1)" class="tap-effect text-left bg-black/30 hover:bg-white/5 p-3.5 rounded-xl border border-white/5 hover:border-cyan-500/30 transition-all space-y-2">
             <div class="flex items-center justify-between text-cyan-400 font-semibold">
               <span>1. Taint Source</span>
               <span class="text-[10px] bg-cyan-500/10 px-1.5 py-0.5 rounded">HTTP IN</span>
             </div>
-            <div class="text-white font-medium">req.body.id</div>
-            <div class="text-[11px] text-apple-muted">Identifier AST node bound to unvalidated user JSON body.</div>
-          </div>
+            <div id="ast-step1-name" class="text-white font-medium">req.body.id</div>
+            <div id="ast-step1-desc" class="text-[11px] text-apple-muted">Identifier AST node bound to unvalidated user JSON body.</div>
+          </button>
 
-          <!-- Step 2 -->
-          <div class="bg-black/30 p-3.5 rounded-xl border border-white/5 space-y-2">
+          <!-- Step 2 (Clickable) -->
+          <button onclick="inspectAstStep(2)" class="tap-effect text-left bg-black/30 hover:bg-white/5 p-3.5 rounded-xl border border-white/5 hover:border-amber-500/30 transition-all space-y-2">
             <div class="flex items-center justify-between text-amber-400 font-semibold">
               <span>2. Flow Propagation</span>
               <span class="text-[10px] bg-amber-500/10 px-1.5 py-0.5 rounded">CONCAT</span>
             </div>
-            <div class="text-white font-medium">BinaryExpression (+)</div>
-            <div class="text-[11px] text-apple-muted">String concatenation operator binds tainted identifier into query string.</div>
-          </div>
+            <div id="ast-step2-name" class="text-white font-medium">BinaryExpression (+)</div>
+            <div id="ast-step2-desc" class="text-[11px] text-apple-muted">String concatenation operator binds tainted identifier into query string.</div>
+          </button>
 
-          <!-- Step 3 -->
-          <div class="bg-black/30 p-3.5 rounded-xl border border-white/5 space-y-2">
+          <!-- Step 3 (Clickable) -->
+          <button onclick="inspectAstStep(3)" class="tap-effect text-left bg-black/30 hover:bg-white/5 p-3.5 rounded-xl border border-white/5 hover:border-rose-500/30 transition-all space-y-2">
             <div class="flex items-center justify-between text-rose-400 font-semibold">
               <span>3. Target Sink</span>
-              <span class="text-[10px] bg-rose-500/10 px-1.5 py-0.5 rounded">CWE-89</span>
+              <span id="ast-step3-badge" class="text-[10px] bg-rose-500/10 px-1.5 py-0.5 rounded">CWE-89</span>
             </div>
-            <div class="text-white font-medium">db.query(sql)</div>
-            <div class="text-[11px] text-apple-muted">CallExpression matches dangerous SQL sink taxonomy definition.</div>
-          </div>
+            <div id="ast-step3-name" class="text-white font-medium">db.query(sql)</div>
+            <div id="ast-step3-desc" class="text-[11px] text-apple-muted">CallExpression matches dangerous SQL sink taxonomy definition.</div>
+          </button>
 
-          <!-- Step 4 -->
-          <div class="bg-black/30 p-3.5 rounded-xl border border-white/5 space-y-2">
+          <!-- Step 4 (Clickable) -->
+          <button onclick="inspectAstStep(4)" class="tap-effect text-left bg-black/30 hover:bg-white/5 p-3.5 rounded-xl border border-white/5 hover:border-emerald-500/30 transition-all space-y-2">
             <div class="flex items-center justify-between text-emerald-400 font-semibold">
               <span>4. AST Surgery</span>
               <span class="text-[10px] bg-emerald-500/10 px-1.5 py-0.5 rounded">REWRITTEN</span>
             </div>
-            <div class="text-white font-medium">ParamBinding ($1)</div>
-            <div class="text-[11px] text-apple-muted">Rewritten into parameterized call with ArrayLiteral parameter values.</div>
-          </div>
+            <div id="ast-step4-name" class="text-white font-medium">ParamBinding ($1)</div>
+            <div id="ast-step4-desc" class="text-[11px] text-apple-muted">Rewritten into parameterized call with ArrayLiteral parameter values.</div>
+          </button>
         </div>
       </div>
 
@@ -528,16 +552,16 @@ async function authenticateUser(req: Request, res: Response) {
             <div class="text-xs text-apple-muted font-mono">Branch: hotfix/aegis-repair-cwe89 &nbsp;→&nbsp; main</div>
           </div>
           <div class="flex items-center space-x-2">
-            <span class="text-xs px-2.5 py-1 rounded-md bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-mono">
+            <button onclick="copyDigest()" class="tap-effect text-xs px-2.5 py-1 rounded-md bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20 font-mono transition-colors" title="Copy GPG key signature">
               Signed-by: AEGIS Key 0x8F2C9B
-            </span>
+            </button>
           </div>
         </div>
 
         <div class="space-y-3 font-mono text-xs">
           <div class="p-3 rounded-lg bg-black/20 border border-white/5 flex items-center justify-between">
             <span class="text-apple-muted">Cryptographic Digest</span>
-            <span class="text-white">SHA-256: 8f2c9b4e1d7a3f0e8a7c2b6d5f4e3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f</span>
+            <span id="audit-sha" class="text-white">SHA-256: 8f2c9b4e1d7a3f0e8a7c2b6d5f4e3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f</span>
           </div>
           <div class="p-3 rounded-lg bg-black/20 border border-white/5 flex items-center justify-between">
             <span class="text-apple-muted">Compliance Standards</span>
@@ -554,7 +578,7 @@ async function authenticateUser(req: Request, res: Response) {
 
   </main>
 
-  <!-- MERGE PR MODAL (APPLE SHEET) -->
+  <!-- MODAL 1: MERGE PR MODAL (APPLE SHEET) -->
   <div id="merge-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
     <div id="merge-modal-card" class="glass-material rounded-2xl max-w-lg w-full p-6 space-y-5 border border-white/10 shadow-apple-lg transform scale-95 transition-transform duration-300">
       
@@ -618,7 +642,11 @@ async function authenticateUser(req: Request, res: Response) {
         </div>
         <h4 class="text-base font-semibold text-white">Pull Request Merged Successfully!</h4>
         <p class="text-xs text-apple-muted font-mono">Commit SHA: 9f8a2c4e1d7a (Signed by AEGIS)</p>
-        <div class="pt-2">
+        <div class="pt-2 flex items-center justify-center space-x-3">
+          <a href="https://github.com/AreebIqbal6/AEGIS" target="_blank" rel="noopener noreferrer" class="tap-effect px-4 py-2 rounded-lg text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center space-x-1.5">
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            <span>View on GitHub</span>
+          </a>
           <button onclick="closeMergeModal()" class="tap-effect px-5 py-2 rounded-lg text-xs font-medium bg-white/10 hover:bg-white/15 text-white border border-white/10">
             Done
           </button>
@@ -628,7 +656,164 @@ async function authenticateUser(req: Request, res: Response) {
     </div>
   </div>
 
-  <!-- SCRIPT: INTERACTIVE CONTROLLER (ZERO DEAD BUTTONS) -->
+  <!-- MODAL 2: CVSS VECTOR BREAKDOWN MODAL -->
+  <div id="cvss-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="cvss-modal-card" class="glass-material rounded-2xl max-w-lg w-full p-6 space-y-5 border border-white/10 shadow-apple-lg transform scale-95 transition-transform duration-300">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center space-x-2.5">
+          <i data-lucide="shield-alert" class="w-5 h-5 text-rose-400"></i>
+          <div>
+            <h3 class="text-sm font-semibold text-white">CVSS v3.1 Severity Breakdown</h3>
+            <p id="cvss-modal-subtitle" class="text-xs text-apple-muted">CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</p>
+          </div>
+        </div>
+        <button onclick="closeCvssModal()" class="tap-effect p-1.5 rounded-lg text-apple-muted hover:text-white hover:bg-white/10">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 font-mono text-xs">
+        <div class="grid grid-cols-2 gap-2 text-apple-muted">
+          <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
+            <span class="block text-[10px] uppercase">Attack Vector</span>
+            <span class="text-white font-medium">Network (AV:N)</span>
+          </div>
+          <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
+            <span class="block text-[10px] uppercase">Attack Complexity</span>
+            <span class="text-white font-medium">Low (AC:L)</span>
+          </div>
+          <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
+            <span class="block text-[10px] uppercase">Privileges Required</span>
+            <span class="text-white font-medium">None (PR:N)</span>
+          </div>
+          <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
+            <span class="block text-[10px] uppercase">User Interaction</span>
+            <span class="text-white font-medium">None (UI:N)</span>
+          </div>
+          <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
+            <span class="block text-[10px] uppercase">Scope</span>
+            <span class="text-white font-medium">Unchanged (S:U)</span>
+          </div>
+          <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
+            <span class="block text-[10px] uppercase">Confidentiality</span>
+            <span class="text-rose-400 font-medium">High Impact (C:H)</span>
+          </div>
+        </div>
+
+        <p class="text-xs text-apple-muted leading-relaxed font-sans pt-1">
+          Unauthenticated remote attackers can execute arbitrary commands or extract full tenant databases without user interaction.
+        </p>
+      </div>
+
+      <div class="flex justify-end pt-2">
+        <button onclick="closeCvssModal()" class="tap-effect px-4 py-2 rounded-lg text-xs font-medium bg-white/10 hover:bg-white/15 text-white">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: ENGINE SPECS ARCHITECTURE MODAL -->
+  <div id="specs-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="specs-modal-card" class="glass-material rounded-2xl max-w-lg w-full p-6 space-y-4 border border-white/10 shadow-apple-lg transform scale-95 transition-transform duration-300">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center space-x-2.5">
+          <i data-lucide="cpu" class="w-5 h-5 text-cyan-400"></i>
+          <div>
+            <h3 class="text-sm font-semibold text-white">AEGIS Formal Verification Architecture</h3>
+            <p class="text-xs text-apple-muted">Kernel Spec & Verification Pipeline</p>
+          </div>
+        </div>
+        <button onclick="closeSpecsModal()" class="tap-effect p-1.5 rounded-lg text-apple-muted hover:text-white hover:bg-white/10">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-2.5 text-xs text-apple-muted">
+        <div class="p-3 bg-black/30 rounded-xl border border-white/5">
+          <div class="font-semibold text-white flex items-center space-x-2 mb-1">
+            <i data-lucide="binary" class="w-4 h-4 text-cyan-400"></i>
+            <span>Microsoft Z3 SMT Solver (WASM)</span>
+          </div>
+          <p>Operates First-Order String Theory (QF_S) with inductive bounds (k=3), proving satisfiability refutation (UNSAT) for synthesized parameter bindings.</p>
+        </div>
+
+        <div class="p-3 bg-black/30 rounded-xl border border-white/5">
+          <div class="font-semibold text-white flex items-center space-x-2 mb-1">
+            <i data-lucide="git-fork" class="w-4 h-4 text-emerald-400"></i>
+            <span>Tree-sitter Concrete Syntax Tree (CST)</span>
+          </div>
+          <p>Two-pass dataflow analysis traces HTTP request parameters (req.body, req.query, req.params) through AST nodes to execution sinks.</p>
+        </div>
+
+        <div class="p-3 bg-black/30 rounded-xl border border-white/5">
+          <div class="font-semibold text-white flex items-center space-x-2 mb-1">
+            <i data-lucide="check-check" class="w-4 h-4 text-amber-400"></i>
+            <span>Sandboxed Regression Chamber</span>
+          </div>
+          <p>Runs Vitest isolated unit and property-based regression suites in &lt;1s before any patch is committed.</p>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2">
+        <button onclick="closeSpecsModal()" class="tap-effect px-4 py-2 rounded-lg text-xs font-medium bg-white/10 hover:bg-white/15 text-white">
+          Understood
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: LIVE EXPLOIT PLAYGROUND SIMULATOR -->
+  <div id="exploit-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="exploit-modal-card" class="glass-material rounded-2xl max-w-lg w-full p-6 space-y-4 border border-white/10 shadow-apple-lg transform scale-95 transition-transform duration-300">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center space-x-2.5">
+          <i data-lucide="terminal" class="w-5 h-5 text-rose-400"></i>
+          <div>
+            <h3 class="text-sm font-semibold text-white">Adversarial Exploit Simulation</h3>
+            <p class="text-xs text-apple-muted">Execute attack payload against before vs after code</p>
+          </div>
+        </div>
+        <button onclick="closeExploitModal()" class="tap-effect p-1.5 rounded-lg text-apple-muted hover:text-white hover:bg-white/10">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 font-mono text-xs">
+        <div>
+          <label class="block text-apple-muted mb-1 text-[11px]">Adversary Test Payload:</label>
+          <input type="text" id="input-exploit-payload" value="' OR '1'='1" class="w-full bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white font-mono focus:border-cyan-400 focus:outline-none" />
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <button onclick="setQuickPayload('sqli_bypass')" class="tap-effect px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-[10px] text-apple-muted">SQL Bypass</button>
+          <button onclick="setQuickPayload('sqli_drop')" class="tap-effect px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-[10px] text-apple-muted">SQL Drop</button>
+          <button onclick="setQuickPayload('xss_script')" class="tap-effect px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-[10px] text-apple-muted">XSS Script</button>
+          <button onclick="setQuickPayload('ssrf_metadata')" class="tap-effect px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-[10px] text-apple-muted">AWS IMDS</button>
+        </div>
+
+        <!-- Simulation Result View -->
+        <div id="exploit-sim-result" class="p-3 rounded-xl bg-black/40 border border-white/5 space-y-2">
+          <div class="text-[11px] text-apple-muted">Simulation Output:</div>
+          <div id="exploit-output-text" class="text-apple-text text-xs leading-relaxed">
+            Click "Execute Exploit Simulation" to evaluate payload against the AST syntax boundaries.
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center pt-2">
+        <button onclick="closeExploitModal()" class="tap-effect px-4 py-2 rounded-lg text-xs font-medium text-apple-muted hover:text-white">
+          Close
+        </button>
+        <button onclick="runExploitSimulation()" id="btn-run-exploit" class="tap-effect px-4 py-2 rounded-lg text-xs font-semibold bg-rose-500 hover:bg-rose-400 text-white shadow-apple-md flex items-center space-x-1.5">
+          <i data-lucide="play" class="w-3.5 h-3.5"></i>
+          <span>Execute Exploit Simulation</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT: COMPLETE INTERACTIVE CONTROLLER (EVERY BUTTON WORKS) -->
   <script>
     // Initialize Lucide Icons
     lucide.createIcons();
@@ -646,6 +831,8 @@ async function authenticateUser(req: Request, res: Response) {
         regressions: '0 / 42',
         filename: 'controllers/auth.ts',
         diffLines: '+1 / -1 lines',
+        cvssVector: 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H',
+        defaultPayload: "' OR '1'='1",
         beforeCode: `// Handler for user authentication dispatch
 async function authenticateUser(req: Request, res: Response) {
   const { id } = req.body;
@@ -694,7 +881,28 @@ async function authenticateUser(req: Request, res: Response) {
 
 ; Check satisfiability of exploit state
 (check-sat)
-; Result: unsat (No execution path allows user input to break syntax barrier)`
+; Result: unsat (No execution path allows user input to break syntax barrier)`,
+        theory: 'QF_S (Quantifier-Free Strings)',
+        depth: 'Inductive Step k=3',
+        clauses: '1,428 clauses',
+        memory: '18.4 MB',
+        tests: [
+          { name: 'auth.test.ts: should prevent single quote SQL escape', time: '12 ms', sec: true },
+          { name: 'auth.test.ts: should authenticate valid admin user', time: '8 ms', sec: false },
+          { name: 'payments.test.ts: backward compatibility integration suite', time: '34 ms', sec: false },
+          { name: 'security_fuzz.test.ts: 10,000 automated fuzz mutations', time: '56 ms', sec: true }
+        ],
+        ast: {
+          s1Name: 'req.body.id',
+          s1Desc: 'Identifier AST node bound to unvalidated user JSON body.',
+          s2Name: 'BinaryExpression (+)',
+          s2Desc: 'String concatenation operator binds tainted identifier into query string.',
+          s3Badge: 'CWE-89',
+          s3Name: 'db.query(sql)',
+          s3Desc: 'CallExpression matches dangerous SQL sink taxonomy definition.',
+          s4Name: 'ParamBinding ($1)',
+          s4Desc: 'Rewritten into parameterized call with ArrayLiteral parameter values.'
+        }
       },
 
       xss: {
@@ -708,6 +916,8 @@ async function authenticateUser(req: Request, res: Response) {
         regressions: '0 / 42',
         filename: 'views/comments.tsx',
         diffLines: '+2 / -1 lines',
+        cvssVector: 'CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:H/I:L/A:N',
+        defaultPayload: '<img src=x onerror=alert(document.cookie)>',
         beforeCode: `export function CommentCard({ comment }: { comment: Comment }) {
   return (
     <div className="comment-bubble">
@@ -750,7 +960,28 @@ async function authenticateUser(req: Request, res: Response) {
 (assert (not (str.contains sanitized "onload=")))
 
 (check-sat)
-; Result: unsat (Exploit pattern completely eradicated from output)`
+; Result: unsat (Exploit pattern completely eradicated from output)`,
+        theory: 'QF_S (DOM String Trees)',
+        depth: 'Inductive Step k=2',
+        clauses: '892 clauses',
+        memory: '14.2 MB',
+        tests: [
+          { name: 'comments.test.tsx: should sanitize script tags in comments', time: '14 ms', sec: true },
+          { name: 'comments.test.tsx: should preserve safe bold & italic markdown', time: '11 ms', sec: false },
+          { name: 'security_fuzz.test.ts: 5,000 DOM mutation fuzz vectors', time: '41 ms', sec: true },
+          { name: 'render.test.tsx: React virtual DOM hydration pass', time: '22 ms', sec: false }
+        ],
+        ast: {
+          s1Name: 'comment.content',
+          s1Desc: 'Untrusted user comment string stored in persistent database.',
+          s2Name: 'PropAssignment (JSX)',
+          s2Desc: 'Passed directly into dangerouslySetInnerHTML prop without encoding.',
+          s3Badge: 'CWE-79',
+          s3Name: 'dangerouslySetInnerHTML',
+          s3Desc: 'React DOM sink that bypasses default JSX auto-escaping.',
+          s4Name: 'DOMPurify.sanitize()',
+          s4Desc: 'Contextual HTML tree sanitizer inserted into JSX AST expression.'
+        }
       },
 
       ssrf: {
@@ -764,6 +995,8 @@ async function authenticateUser(req: Request, res: Response) {
         regressions: '0 / 42',
         filename: 'services/webhook.ts',
         diffLines: '+4 / -1 lines',
+        cvssVector: 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:N',
+        defaultPayload: 'http://169.254.169.254/latest/meta-data/',
         beforeCode: `export async function triggerWebhook(targetUrl: string, payload: any) {
   // Outbound notification dispatcher
 <span class="bg-rose-500/20 text-rose-200 block -mx-4 px-4 py-1 border-l-2 border-rose-500 font-semibold">- return await fetch(targetUrl, { method: "POST", body: JSON.stringify(payload) });</span>
@@ -799,19 +1032,71 @@ async function authenticateUser(req: Request, res: Response) {
 (assert (= target_ip metadata_ip))
 
 (check-sat)
-; Result: unsat (Invariant holds: target_ip is strictly disjoint from protected zones)`
+; Result: unsat (Invariant holds: target_ip is strictly disjoint from protected zones)`,
+        theory: 'QF_BV (BitVector Theory)',
+        depth: 'Inductive Step k=4',
+        clauses: '2,104 clauses',
+        memory: '22.1 MB',
+        tests: [
+          { name: 'webhook.test.ts: should block AWS 169.254.169.254 metadata endpoint', time: '16 ms', sec: true },
+          { name: 'webhook.test.ts: should block loopback 127.0.0.1 requests', time: '9 ms', sec: true },
+          { name: 'webhook.test.ts: should allow valid public webhooks (https://hooks.slack.com)', time: '28 ms', sec: false },
+          { name: 'dns.test.ts: DNS rebinding race condition mitigation test', time: '36 ms', sec: true }
+        ],
+        ast: {
+          s1Name: 'targetUrl',
+          s1Desc: 'String parameter provided by external API consumer in POST body.',
+          s2Name: 'ArgumentPass',
+          s2Desc: 'Target URL passed uninspected to global fetch() call.',
+          s3Badge: 'CWE-918',
+          s3Name: 'fetch(targetUrl)',
+          s3Desc: 'Outbound HTTP network call sink without subnet restrictions.',
+          s4Name: 'assertPublicInternetEndpoint()',
+          s4Desc: 'Synchronous DNS pre-resolution guard enforcing RFC 1918 blocklist.'
+        }
       }
     };
 
     let activeScenarioKey = 'sqli';
+    let isTaintHighlighted = true;
 
-    // SCENARIO SWITCHING
+    // POPULATE INITIAL TEST LIST
+    function renderTests(filter = 'all') {
+      const container = document.getElementById('test-chamber-list');
+      const tests = scenarios[activeScenarioKey].tests;
+      container.innerHTML = '';
+
+      tests.forEach((t, idx) => {
+        if (filter === 'security' && !t.sec) return;
+
+        const row = document.createElement('div');
+        row.className = 'tap-effect flex items-center justify-between p-3 rounded-lg bg-black/20 hover:bg-white/5 border border-white/5 transition-colors';
+        row.title = 'Click to run this individual unit test';
+        row.onclick = () => runSingleTest(idx, t.name);
+
+        row.innerHTML = `
+          <div class="flex items-center space-x-2.5">
+            <i id="test-icon-${idx}" data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+            <span class="text-white hover:text-cyan-300 transition-colors">${t.name}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span id="test-time-${idx}" class="text-apple-muted">${t.time}</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-apple-muted hover:text-white">Run</span>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      lucide.createIcons();
+    }
+
+    // SCENARIO SWITCHING (100% INTERACTIVE)
     function switchScenario(key) {
       if (!scenarios[key]) return;
       activeScenarioKey = key;
       const s = scenarios[key];
 
-      // Update Header Pills
+      // Update Header Pills (Desktop)
       document.querySelectorAll('.scenario-pill').forEach(btn => {
         btn.classList.remove('text-white', 'bg-apple-card', 'shadow-apple-sm');
         btn.classList.add('text-apple-muted');
@@ -822,24 +1107,27 @@ async function authenticateUser(req: Request, res: Response) {
         activePill.classList.add('text-white', 'bg-apple-card', 'shadow-apple-sm');
       }
 
-      // Update Mobile Pills
+      // Update Header Pills (Mobile)
       ['sqli', 'xss', 'ssrf'].forEach(k => {
         const mobBtn = document.getElementById(`mob-pill-${k}`);
         if (mobBtn) {
           if (k === key) {
-            mobBtn.className = 'px-2.5 py-1 text-xs rounded-md bg-apple-card text-white font-medium';
+            mobBtn.className = 'tap-effect px-2.5 py-1 text-xs rounded-md bg-apple-card text-white font-medium';
           } else {
-            mobBtn.className = 'px-2.5 py-1 text-xs rounded-md text-apple-muted';
+            mobBtn.className = 'tap-effect px-2.5 py-1 text-xs rounded-md text-apple-muted';
           }
         }
       });
 
       // Update Incident Hero
-      document.getElementById('badge-severity').className = `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${s.severityBg}`;
-      document.getElementById('badge-severity').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-current mr-1.5 animate-pulse"></span>${s.severity}`;
+      const sevBadge = document.getElementById('badge-severity');
+      sevBadge.className = `tap-effect inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${s.severityBg} hover:opacity-80 transition-opacity`;
+      sevBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-current mr-1.5 animate-pulse"></span>${s.severity}`;
+      
       document.getElementById('badge-file').textContent = s.file;
       document.getElementById('incident-title').textContent = s.title;
       document.getElementById('incident-desc').textContent = s.desc;
+      document.getElementById('cvss-modal-subtitle').textContent = s.cvssVector;
 
       // Update Telemetry
       document.getElementById('stat-time').textContent = s.time;
@@ -848,13 +1136,37 @@ async function authenticateUser(req: Request, res: Response) {
 
       // Update Diff
       document.getElementById('diff-filename').textContent = s.filename;
+      document.getElementById('diff-lines-badge').textContent = s.diffLines;
       document.getElementById('code-before').innerHTML = s.beforeCode;
       document.getElementById('code-after').innerHTML = s.afterCode;
       document.getElementById('code-unified').innerHTML = s.unifiedCode;
+      document.getElementById('unified-header-label').innerHTML = `--- a/${s.filename} &nbsp;&nbsp; +++ b/${s.filename}`;
 
       // Update Z3 Tab
       document.getElementById('z3-formula').textContent = s.formula;
       document.getElementById('z3-smt-code').textContent = s.smtCode;
+      document.getElementById('stat-theory').textContent = s.theory;
+      document.getElementById('stat-depth').textContent = s.depth;
+      document.getElementById('stat-clauses').textContent = s.clauses;
+      document.getElementById('stat-memory').textContent = s.memory;
+
+      // Update AST Tab
+      document.getElementById('ast-step1-name').textContent = s.ast.s1Name;
+      document.getElementById('ast-step1-desc').textContent = s.ast.s1Desc;
+      document.getElementById('ast-step2-name').textContent = s.ast.s2Name;
+      document.getElementById('ast-step2-desc').textContent = s.ast.s2Desc;
+      document.getElementById('ast-step3-badge').textContent = s.ast.s3Badge;
+      document.getElementById('ast-step3-name').textContent = s.ast.s3Name;
+      document.getElementById('ast-step3-desc').textContent = s.ast.s3Desc;
+      document.getElementById('ast-step4-name').textContent = s.ast.s4Name;
+      document.getElementById('ast-step4-desc').textContent = s.ast.s4Desc;
+
+      // Update Exploit Payload default input
+      document.getElementById('input-exploit-payload').value = s.defaultPayload;
+      document.getElementById('exploit-output-text').textContent = 'Ready to simulate attack for ' + key.toUpperCase() + '.';
+
+      // Re-render tests
+      renderTests();
 
       // Toast feedback
       showToast(`Switched scenario to ${key.toUpperCase()}`);
@@ -874,6 +1186,7 @@ async function authenticateUser(req: Request, res: Response) {
         btnSplit.classList.remove('text-apple-muted');
         btnUnified.classList.remove('text-white', 'bg-apple-card', 'shadow-sm');
         btnUnified.classList.add('text-apple-muted');
+        showToast("Switched to Side-by-Side view");
       } else {
         splitView.classList.add('hidden');
         unifiedView.classList.remove('hidden');
@@ -881,6 +1194,31 @@ async function authenticateUser(req: Request, res: Response) {
         btnUnified.classList.remove('text-apple-muted');
         btnSplit.classList.remove('text-white', 'bg-apple-card', 'shadow-sm');
         btnSplit.classList.add('text-apple-muted');
+        showToast("Switched to Unified Diff view");
+      }
+    }
+
+    // TOGGLE TAINT HIGHLIGHT OVERLAY
+    function toggleTaintHighlight() {
+      isTaintHighlighted = !isTaintHighlighted;
+      const btn = document.getElementById('btn-toggle-taint');
+      const txt = document.getElementById('taint-toggle-text');
+      
+      const redBlocks = document.querySelectorAll('#diff-split-view .bg-rose-500\\/20');
+      const greenBlocks = document.querySelectorAll('#diff-split-view .bg-emerald-500\\/20');
+
+      if (isTaintHighlighted) {
+        btn.classList.add('bg-white/10', 'text-white');
+        txt.textContent = 'Highlight Taint: ON';
+        redBlocks.forEach(el => el.classList.remove('opacity-40'));
+        greenBlocks.forEach(el => el.classList.remove('opacity-40'));
+        showToast("AST Taint highlighting enabled");
+      } else {
+        btn.classList.remove('bg-white/10', 'text-white');
+        txt.textContent = 'Highlight Taint: OFF';
+        redBlocks.forEach(el => el.classList.add('opacity-40'));
+        greenBlocks.forEach(el => el.classList.add('opacity-40'));
+        showToast("AST Taint highlighting dimmed");
       }
     }
 
@@ -907,20 +1245,38 @@ async function authenticateUser(req: Request, res: Response) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(patch).then(() => {
           showToast("Unified patch copied to clipboard");
-        }).catch(() => fallbackCopy(patch));
+        }).catch(() => fallbackCopy(patch, "Unified patch copied to clipboard"));
       } else {
-        fallbackCopy(patch);
+        fallbackCopy(patch, "Unified patch copied to clipboard");
       }
     }
 
-    function fallbackCopy(text) {
+    // COPY SMT-LIB2 CODE
+    function copySmtLibCode() {
+      const code = scenarios[activeScenarioKey].smtCode;
+      fallbackCopy(code, "SMT-LIB2 specification copied to clipboard");
+    }
+
+    // COPY FILE PATH
+    function copyFilePath() {
+      const fn = scenarios[activeScenarioKey].filename;
+      fallbackCopy(fn, `File path copied: ${fn}`);
+    }
+
+    // COPY GPG DIGEST
+    function copyDigest() {
+      const digest = document.getElementById('audit-sha').textContent;
+      fallbackCopy(digest, "GPG Key digest copied to clipboard");
+    }
+
+    function fallbackCopy(text, msg) {
       const ta = document.createElement("textarea");
       ta.value = text;
       document.body.appendChild(ta);
       ta.select();
       document.execCommand("copy");
       document.body.removeChild(ta);
-      showToast("Unified patch copied to clipboard");
+      showToast(msg || "Copied to clipboard");
     }
 
     // DOWNLOAD PATCH FILE
@@ -951,6 +1307,19 @@ async function authenticateUser(req: Request, res: Response) {
       }, 2400);
     }
 
+    // JUMP TO DIFF
+    function jumpToDiff() {
+      const el = document.getElementById('diff-section');
+      el.scrollIntoView({ behavior: 'smooth' });
+      showToast(`Inspecting ${scenarios[activeScenarioKey].filename}`);
+    }
+
+    // LOGO CLICK (RETURN HOME / RESET)
+    function handleLogoClick() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showToast("AEGIS v1.0 • Formal Security Kernel Active");
+    }
+
     // RE-VERIFY SOLVER SIMULATION
     let isVerifying = false;
     function runVerificationAnimation() {
@@ -966,11 +1335,31 @@ async function authenticateUser(req: Request, res: Response) {
         icon.classList.remove('animate-spin');
         text.textContent = 'Re-Verify Z3';
         isVerifying = false;
-        showToast("✓ Invariant Proven: UNSAT (0 counterexamples)");
-      }, 1200);
+        showToast("✓ Invariant Proven: UNSAT (0 counterexamples found in 44ms)");
+      }, 1100);
     }
 
-    // TEST SIMULATION
+    // RUN INDIVIDUAL SINGLE TEST
+    function runSingleTest(idx, testName) {
+      const icon = document.getElementById(`test-icon-${idx}`);
+      const time = document.getElementById(`test-time-${idx}`);
+      if (!icon) return;
+
+      icon.outerHTML = `<i id="test-icon-${idx}" data-lucide="loader-2" class="w-4 h-4 text-cyan-400 animate-spin"></i>`;
+      lucide.createIcons();
+
+      setTimeout(() => {
+        const curIcon = document.getElementById(`test-icon-${idx}`);
+        if (curIcon) {
+          curIcon.outerHTML = `<i id="test-icon-${idx}" data-lucide="check" class="w-4 h-4 text-emerald-400"></i>`;
+          time.textContent = `${Math.floor(Math.random() * 8 + 6)} ms`;
+          lucide.createIcons();
+          showToast(`✓ Passed: ${testName.substring(0, 32)}...`);
+        }
+      }, 600);
+    }
+
+    // TEST ALL SUITE SIMULATION
     function runTestSimulation() {
       const btn = document.getElementById('btn-run-tests');
       btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 text-cyan-400 animate-spin"></i><span>Executing 42 Tests...</span>`;
@@ -979,8 +1368,38 @@ async function authenticateUser(req: Request, res: Response) {
       setTimeout(() => {
         btn.innerHTML = `<i data-lucide="play" class="w-3.5 h-3.5 text-emerald-400"></i><span>Re-run Suite</span>`;
         lucide.createIcons();
-        showToast("✓ 42/42 Tests Passed (0 Regressions)");
+        renderTests();
+        showToast("✓ 42/42 Tests Passed (0 Regressions across all suites)");
       }, 900);
+    }
+
+    // FILTER TESTS IN CHAMBER
+    function filterTests(type) {
+      const btnAll = document.getElementById('btn-filter-all');
+      const btnSec = document.getElementById('btn-filter-sec');
+      if (type === 'all') {
+        btnAll.className = 'tap-effect px-2.5 py-1 rounded text-xs bg-apple-card text-white border border-white/10';
+        btnSec.className = 'tap-effect px-2.5 py-1 rounded text-xs text-apple-muted hover:text-white border border-transparent';
+        renderTests('all');
+      } else {
+        btnSec.className = 'tap-effect px-2.5 py-1 rounded text-xs bg-apple-card text-white border border-white/10';
+        btnAll.className = 'tap-effect px-2.5 py-1 rounded text-xs text-apple-muted hover:text-white border border-transparent';
+        renderTests('security');
+      }
+    }
+
+    // INSPECT AST STEP CLICK
+    function inspectAstStep(stepNumber) {
+      const s = scenarios[activeScenarioKey];
+      if (stepNumber === 1) {
+        showToast(`Step 1 AST: ${s.ast.s1Name} [HTTP input node]`);
+      } else if (stepNumber === 2) {
+        showToast(`Step 2 AST: ${s.ast.s2Name} [Dataflow operator]`);
+      } else if (stepNumber === 3) {
+        showToast(`Step 3 AST: ${s.ast.s3Name} [Target dangerous sink]`);
+      } else {
+        showToast(`Step 4 AST: ${s.ast.s4Name} [Synthesized parameter call]`);
+      }
     }
 
     // MERGE PR MODAL CONTROLS
@@ -998,12 +1417,6 @@ async function authenticateUser(req: Request, res: Response) {
       card.classList.remove('scale-100');
       card.classList.add('scale-95');
       modal.classList.add('opacity-0', 'pointer-events-none');
-
-      // Reset modal state
-      setTimeout(() => {
-        document.getElementById('modal-content-pending').classList.remove('hidden');
-        document.getElementById('modal-content-success').classList.add('hidden');
-      }, 300);
     }
 
     function executeMergeAction() {
@@ -1014,14 +1427,119 @@ async function authenticateUser(req: Request, res: Response) {
       setTimeout(() => {
         document.getElementById('modal-content-pending').classList.add('hidden');
         document.getElementById('modal-content-success').classList.remove('hidden');
-        document.getElementById('btn-merge-pr').innerHTML = `<i data-lucide="check-check" class="w-3.5 h-3.5"></i><span>PR #142 Merged</span>`;
-        document.getElementById('btn-merge-pr').classList.remove('bg-emerald-500', 'hover:bg-emerald-400');
-        document.getElementById('btn-merge-pr').classList.add('bg-white/10', 'text-apple-muted', 'cursor-default');
-        document.getElementById('btn-merge-pr').onclick = null;
+        
+        const mainMergeBtn = document.getElementById('btn-merge-pr');
+        mainMergeBtn.innerHTML = `<i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-400"></i><span>PR #142 Merged</span>`;
+        mainMergeBtn.classList.remove('bg-emerald-500', 'hover:bg-emerald-400');
+        mainMergeBtn.classList.add('bg-white/10', 'text-emerald-400', 'cursor-default');
+        
         lucide.createIcons();
-        showToast("✓ PR #142 successfully merged into main");
-      }, 1100);
+        showToast("✓ PR #142 successfully merged into main (SHA: 9f8a2c4)");
+      }, 1000);
     }
+
+    // CVSS MODAL CONTROLS
+    function openCvssModal() {
+      const modal = document.getElementById('cvss-modal');
+      const card = document.getElementById('cvss-modal-card');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      card.classList.remove('scale-95');
+      card.classList.add('scale-100');
+    }
+
+    function closeCvssModal() {
+      const modal = document.getElementById('cvss-modal');
+      const card = document.getElementById('cvss-modal-card');
+      card.classList.remove('scale-100');
+      card.classList.add('scale-95');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    // ENGINE SPECS MODAL CONTROLS
+    function openEngineSpecsModal() {
+      const modal = document.getElementById('specs-modal');
+      const card = document.getElementById('specs-modal-card');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      card.classList.remove('scale-95');
+      card.classList.add('scale-100');
+    }
+
+    function closeSpecsModal() {
+      const modal = document.getElementById('specs-modal');
+      const card = document.getElementById('specs-modal-card');
+      card.classList.remove('scale-100');
+      card.classList.add('scale-95');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    // LIVE EXPLOIT PLAYGROUND SIMULATOR
+    function openExploitSimulatorModal() {
+      const modal = document.getElementById('exploit-modal');
+      const card = document.getElementById('exploit-modal-card');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      card.classList.remove('scale-95');
+      card.classList.add('scale-100');
+    }
+
+    function closeExploitModal() {
+      const modal = document.getElementById('exploit-modal');
+      const card = document.getElementById('exploit-modal-card');
+      card.classList.remove('scale-100');
+      card.classList.add('scale-95');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    function setQuickPayload(type) {
+      const inp = document.getElementById('input-exploit-payload');
+      if (type === 'sqli_bypass') inp.value = "' OR '1'='1";
+      if (type === 'sqli_drop') inp.value = "'; DROP TABLE users; --";
+      if (type === 'xss_script') inp.value = "<img src=x onerror=alert(document.cookie)>";
+      if (type === 'ssrf_metadata') inp.value = "http://169.254.169.254/latest/meta-data/";
+      showToast("Updated payload preset");
+    }
+
+    function runExploitSimulation() {
+      const payload = document.getElementById('input-exploit-payload').value;
+      const btn = document.getElementById('btn-run-exploit');
+      const out = document.getElementById('exploit-output-text');
+
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>Simulating...</span>`;
+      lucide.createIcons();
+
+      setTimeout(() => {
+        btn.innerHTML = `<i data-lucide="play" class="w-3.5 h-3.5"></i><span>Execute Exploit Simulation</span>`;
+        lucide.createIcons();
+
+        out.innerHTML = `
+          <div class="space-y-2">
+            <div class="text-rose-400 font-semibold flex items-center">
+              <i data-lucide="alert-triangle" class="w-3.5 h-3.5 mr-1 text-rose-400 inline"></i>
+              BEFORE PATCH (Vulnerable):
+            </div>
+            <div class="bg-rose-950/30 p-2 rounded border border-rose-500/20 text-rose-200">
+              Payload was directly concatenated into the raw AST. Tokenizer boundary broken! Exploit evaluates to TRUE.
+            </div>
+
+            <div class="text-emerald-400 font-semibold flex items-center pt-1">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5 mr-1 text-emerald-400 inline"></i>
+              AFTER AEGIS PATCH (Formally Verified):
+            </div>
+            <div class="bg-emerald-950/30 p-2 rounded border border-emerald-500/20 text-emerald-200">
+              Payload was safely isolated in parameter slot ($1). Evaluated strictly as literal string. Attack thwarted (Q.E.D.)!
+            </div>
+          </div>
+        `;
+        lucide.createIcons();
+        showToast("✓ Exploit simulation complete: Patch verified resilient!");
+      }, 800);
+    }
+
+    function openSolverTraceModal() {
+      showToast("Z3 SMT Solver Trace: 1,428 clauses resolved with 0 refutation violations (Q.E.D.)");
+    }
+
+    // INITIAL RENDER
+    renderTests();
   </script>
 </body>
 </html>
