@@ -1,6 +1,7 @@
 <div align="center">
 
-<img src="./assets/logo-cutout.png" alt="AEGIS Official Logo" width="550" style="max-width: 100%;" />
+<img width="1024" height="341" alt="logo-cutout" src="https://github.com/user-attachments/assets/d897944d-401c-4709-bb0f-e2cdc9345a9e" />
+
 
 <br/><br/>
 
