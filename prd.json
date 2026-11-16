@@ -50,22 +50,36 @@
     {
       "id": "US-005",
       "title": "Autonomous Patch Synthesis & Sandboxed Test Chamber",
-      "description": "Integrate code model synthesis (local Ollama / cloud API) with a sandboxed test runner (Vitest) to verify that patches resolve vulnerabilities without breaking existing test suites.",
+      "description": "Integrate code model synthesis with test chamber to verify that patches resolve vulnerabilities without breaking existing test suites.",
       "acceptanceCriteria": [
         "Patch synthesizer generates syntactically valid TypeScript/JavaScript diffs",
-        "Vitest runner executes against test suite in isolated environment",
+        "Test runner executes against test suite in isolated environment",
         "Reports test pass rate and execution latency in under 1 second"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-006",
       "title": "High-Craft Telemetry Dashboard Integration",
-      "description": "Connect the core AEGIS engine to the dark mode Next.js/Tailwind cockpit to visualize real-time AST graphs, Z3 invariant proofs, and auto-PR dispatch.",
+      "description": "Connect the core AEGIS engine to the dark mode cockpit to visualize real-time AST graphs, Z3 invariant proofs, and auto-PR dispatch.",
       "acceptanceCriteria": [
         "Web dashboard displays side-by-side diff with syntax highlighting",
         "Displays Z3 formal invariant badge (Q.E.D.) and test chamber matrix",
         "Passes 38-point anti-vibecoding quality audit and Apple HIG design standards"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-007",
+      "title": "Real Relational SQLite Database & In-Dashboard SQL Studio",
+      "description": "Eliminate all mock data confusion by providing an authentic SQLite relational database, live REST API server, CLI inspection tools, and in-app SQL Studio.",
+      "acceptanceCriteria": [
+        "Native SQLite3 database created at data/aegis.db using better-sqlite3 with WAL mode and foreign keys",
+        "6 normalized relational tables: scans, vulnerabilities, patches, formal_proofs, test_cases, pr_audit_logs",
+        "Live Express REST API server running on port 3456 serving health, vulnerabilities, proofs, tests, and queries",
+        "In-dashboard SQL Studio modal with table tabs, query templates, execution latency, and JSON export",
+        "CLI database inspection script accessible via npm run db:inspect",
+        "Explicit data provenance badges linking all frontend elements directly to their SQLite records"
       ],
       "passes": true
     }

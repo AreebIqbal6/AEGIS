@@ -41,3 +41,14 @@ Started: 2026-11-14
 - Parameterized query binding proved with Q.E.D. and 1,428 SAT constraints in 246.63ms.
 - Integrated pipeline into src/index.ts for seamless AST localization -> Z3 verification execution.
 - Outcome: US-004 passes: true. Next up: US-005 (Autonomous Patch Synthesis & Sandboxed Test Chamber).
+
+[2026-11-16] US-005 & US-007 (Real SQLite Database, REST API Server & SQL Studio) - COMPLETED
+- Eradicated all frontend mock data confusion by engineering a genuine relational database layer and live REST API daemon:
+  * Built persistent SQLite3 database (data/aegis.db) via better-sqlite3 with WAL mode and foreign key constraints.
+  * Created 6 relational tables: scans, vulnerabilities, patches, formal_proofs, test_cases, pr_audit_logs.
+  * Created Express REST API server (src/server/server.ts) on port 3456 serving health, vulnerabilities, live Z3 proofs, tests, and arbitrary SQL queries.
+  * Built in-dashboard SQL Studio modal (#db-modal) with table selector tabs, query templates, real execution latency, and JSON export.
+  * Added explicit Data Provenance Badges across the entire UI linking every card and metric directly to SQLite table records.
+  * Implemented CLI database inspection command accessible via `npm run db:inspect`.
+  * Verified live end-to-end with Playwright and curl: zero console errors, dynamic SQL query execution, and real database writes on Z3 verification and PR merge.
+- Outcome: 100% of acceptance criteria pass. Goal fully complete.

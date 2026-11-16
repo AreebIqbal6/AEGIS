@@ -88,3 +88,33 @@ $$\forall \text{ input } x \in \text{Strings}, \quad \text{TaintedSource}(x) \ca
    - Assertion: `query_template == "SELECT * FROM users WHERE id = $1"` and `query_template.contains(taint)`
    - Result: `UNSAT` (Proven mathematically impossible for user input to escape the data slot)
    - Decision: Proof status marked `Q.E.D.`; 1,428 SAT constraints resolved; PR certified for auto-merge.
+
+---
+
+## 7. Real SQLite Database Architecture & In-Dashboard SQL Studio
+
+### The Problem: Fake Mock Data Confusion & Database Opacity
+In many automated developer tools, frontends display disconnected simulated JSON objects, giving developers no certainty about what is real, what is persisted, and what is computed by real tools. Developers cannot inspect the state of the system or verify database tables directly.
+
+### The Solution: High-Performance SQLite3 (`better-sqlite3`) & SQL Studio
+To eliminate mock data confusion completely, AEGIS implements an authentic, verifiable relational database engine:
+1. **Persistent Relational Database (`data/aegis.db`):**
+   - Native SQLite3 storage utilizing `better-sqlite3` with Write-Ahead Logging (`PRAGMA journal_mode = WAL`) and strict foreign key integrity (`PRAGMA foreign_keys = ON`).
+   - 6 fully connected relational tables:
+     - `scans`: Historical AST static analysis runs and latency metrics.
+     - `vulnerabilities`: Normalized CWE findings, CVSS v3.1 scores, AST source ranges, and lifecycle statuses.
+     - `patches`: Autonomous AST surgery strategies, before/after code representations, and unified diffs.
+     - `formal_proofs`: Microsoft Z3 SMT solver outputs, first-order formulas, SMT-LIB2 specs, constraint counts, and Q.E.D. flags.
+     - `test_cases`: Regression and security test assertions with execution times.
+     - `pr_audit_logs`: Git branches, cryptographic commit SHAs, GPG signatures, and merge timestamps.
+2. **Real REST API Daemon (`src/server/server.ts` on port 3456):**
+   - `GET /api/health`: Real database table statistics and prover uptime.
+   - `GET /api/vulnerabilities`: Returns all joined records directly from SQLite.
+   - `POST /api/verify/z3`: Executes the real Microsoft Z3 WebAssembly solver, records proof row to SQLite.
+   - `POST /api/pr/merge`: Formally executes PR merge and writes `MERGED` status to SQLite.
+   - `POST /api/db/query`: Executes arbitrary user SQL queries safely on `data/aegis.db`.
+3. **In-Dashboard SQL Studio & CLI Inspector (`npm run db:inspect`):**
+   - Accessible directly via the prominent `[ 🗄️ Database Inspector ]` button in the UI.
+   - Quick table selector tabs for all 6 tables with live row counts.
+   - Arbitrary SQL query input box with execution time metrics and JSON export.
+   - Explicit **Data Provenance Badges** on every card linking frontend elements directly to their SQLite table and row IDs.

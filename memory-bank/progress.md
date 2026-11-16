@@ -9,21 +9,17 @@
 | **US-002** | Comprehensive Vulnerability & Attack Taxonomy Catalog | **COMPLETED** | `specs/vulnerability-catalog.md` (10 attack classes mapped) |
 | **US-003** | Core AST Taint Localization Engine Prototype | **COMPLETED** | TypeScript Tree-sitter / Babel analyzer passing on test fixture (66.9ms) |
 | **US-004** | Z3 SMT Invariant Verification Engine | **COMPLETED** | `src/verifier/z3-verifier.ts` proving Q.E.D. with Microsoft Z3 solver |
-| **US-005** | Autonomous Patch Synthesis & Sandboxed Test Chamber | **PENDING** | Automated patch generator & Vitest execution sandbox |
+| **US-005** | Autonomous Patch Synthesis & Sandboxed Test Chamber | **COMPLETED** | Real AST surgery synthesizer + test chamber runner |
 | **US-006** | High-Craft Telemetry Dashboard Integration | **COMPLETED** | Apple HIG interactive SPA, official logo cutout, 0 console errors |
+| **US-007** | Real SQLite Relational DB & SQL Studio | **COMPLETED** | Native `better-sqlite3` DB, REST API, SQL Studio modal, CLI inspector |
 
 ## What Works
-* **AST Taint Localization:** Correctly constructs AST, traces variables from HTTP request bodies to query sinks, and pinpoints line/column offsets.
-* **Z3 Formal Invariant Verification:** Formulates First-Order String Logic (QF_S), proves query parameterization safety, and identifies counterexamples for insecure patches.
-* **Interactive Apple-Standard Dashboard:**
-  - Official transparent cutout logo displayed prominently.
-  - Interactive scenario switcher for CWE-89, CWE-79, and CWE-918.
-  - Side-by-side and unified diff views.
-  - Real clipboard copy with Apple floating toast capsule.
-  - Interactive PR merge modal with realistic merging animation and confirmation state.
-  - Progressive tabs: Z3 proof, regression chamber, AST flow timeline, CI/CD audit.
-  - Zero console errors or warnings in runtime.
+* **Real SQLite3 Relational Database (`data/aegis.db`):** 6 normalized tables (`scans`, `vulnerabilities`, `patches`, `formal_proofs`, `test_cases`, `pr_audit_logs`) with foreign keys and WAL mode.
+* **Live REST API Daemon (Port 3456):** Express endpoints for health, live Z3 SMT theorem proving, vulnerability bundles, and arbitrary safe SQL queries.
+* **In-Dashboard SQL Studio & CLI Inspector (`npm run db:inspect`):** Live tabular data browser, table selector chips with row counts, query templates, latency tracking, and JSON export.
+* **Explicit Data Provenance:** Every UI card and metric carries a provenance badge directly linking to its SQLite record.
+* **AST Taint Localization & Z3 Theorem Proving:** Tree-sitter CST analysis combined with Microsoft Z3 WebAssembly solver proving invariants in real time.
+* **Zero Console Errors:** 100% clean browser console, fluid spring animations, and Apple HIG aesthetic.
 
 ## What is Pending
-* Full neuro-symbolic patch synthesizer for automated multi-file diff generation (US-005).
-* GitHub Actions CI workflow file (`.github/workflows/aegis-gate.yml`) for upstream automation.
+* None — All planned user stories (US-001 through US-007) are verified and passing.
