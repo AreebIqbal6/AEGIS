@@ -68,7 +68,9 @@ AEGIS features a calm, progressive-disclosure dashboard designed according to **
   <img src="./dashboard/preview.png" alt="AEGIS Apple Design Telemetry Dashboard" style="border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);" width="100%" />
 </div>
 
-* **Live Public Web App:** [https://areebiqbal6.github.io/AEGIS/](https://areebiqbal6.github.io/AEGIS/)
+* **Live on Vercel:** [https://brisk-crystal-pxoc2bm.tmp.now](https://brisk-crystal-pxoc2bm.tmp.now) (Claim permanently: [Claim Deployment](https://vercel.com/claim-deployment?code=82251894-1445-485b-9178-3d77550f03b7))
+* **1-Click Vercel Deploy:** [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAreebIqbal6%2FAEGIS)
+* **GitHub Pages Mirror:** [https://areebiqbal6.github.io/AEGIS/](https://areebiqbal6.github.io/AEGIS/)
 * **Local Offline File:** Open [`dashboard/index.html`](./dashboard/index.html) in any browser.
 
 ---
