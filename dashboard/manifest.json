@@ -1,0 +1,17 @@
+{
+  "name": "AEGIS Formal Kernel",
+  "short_name": "AEGIS",
+  "description": "Autonomous Engine for Program Vulnerability Repair & Formal Invariant Verification",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0D14",
+  "theme_color": "#0A0D14",
+  "icons": [
+    {
+      "src": "logo-cutout.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
