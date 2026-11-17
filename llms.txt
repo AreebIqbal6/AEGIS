@@ -1,0 +1,6 @@
+# AEGIS
+
+> Automated vulnerability-patch assistant for CI/CD pipelines (final year project). It finds CWE-89 SQL injection in TypeScript with Tree-sitter, drafts a parameterized fix, runs the tests, and opens a GitHub pull request for a human to review. It never auto-merges. No formal solver runs yet; formal proof is a Phase 2 roadmap item.
+
+- [Source and live pull request](https://github.com/AreebIqbal6/AEGIS): repository, with PR #1 holding the real diff and test output
+- [Dashboard](https://aegisfyp.vercel.app/): every figure is tagged live, seed data, not implemented, or policy

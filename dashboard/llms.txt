@@ -1,17 +1,6 @@
-# AEGIS — Autonomous Program Vulnerability Repair & Formal Invariant Verification
+# AEGIS
 
-> Autonomous Engine for Program Vulnerability Repair and Formal Invariant Verification in CI/CD Pipelines.
+> Automated vulnerability-patch assistant for CI/CD pipelines (final year project). It finds CWE-89 SQL injection in TypeScript with Tree-sitter, drafts a parameterized fix, runs the tests, and opens a GitHub pull request for a human to review. It never auto-merges. No formal solver runs yet; formal proof is a Phase 2 roadmap item.
 
-## Core Capabilities
-- Polyglot AST Taint Localization: 2-pass AST propagation with line/col precision.
-- Microsoft Z3 SMT Formal Theorem Verification: First-Order Logic invariant proofs (QF_S).
-- Autonomous Patch Synthesis: Sound syntactic transformations (parameterization, sanitization, allowlisting).
-- Sandboxed Regression Chamber: Regression testing with microsecond latency reporting.
-- Relational SQLite Relational Store: Persistent audit logs, proofs, patches, and scans in WAL mode.
-
-## API Documentation
-- GET /api/health: Returns kernel uptime, SQLite table stats, and Z3 solver engine status.
-- GET /api/vulnerabilities: Returns normalized bundles containing vulnerability, patch diffs, formal proofs, and tests.
-- POST /api/verify/z3: Executes Microsoft Z3 theorem proof against patch candidate.
-- POST /api/db/query: Safe query explorer allowing read-only SELECT and PRAGMA queries.
-- POST /api/pr/merge: Atomically executes pull request merge and commits audit trail to SQLite.
+- [Source and live pull request](https://github.com/AreebIqbal6/AEGIS): repository, with PR #1 holding the real diff and test output
+- [Dashboard](https://aegisfyp.vercel.app/): every figure is tagged live, seed data, not implemented, or policy
