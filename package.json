@@ -31,13 +31,18 @@
     "@types/express": "^5.0.6",
     "better-sqlite3": "^13.2.0",
     "cors": "^2.8.6",
+    "diff": "^9.0.0",
     "express": "^5.3.0",
+    "tree-sitter": "^0.21.1",
+    "tree-sitter-typescript": "^0.23.2",
+    "web-tree-sitter": "^0.27.2",
     "z3-solver": "^5.4.1"
   },
   "devDependencies": {
     "@types/babel__generator": "^7.6.8",
     "@types/babel__traverse": "^7.20.6",
     "@types/better-sqlite3": "^9.6.0",
+    "@types/diff": "^7.0.2",
     "@types/node": "^22.0.0",
     "typescript": "^5.5.0"
   }
