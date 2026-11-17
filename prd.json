@@ -1,7 +1,7 @@
 {
   "project": "AEGIS",
   "description": "Autonomous Engine for Program Vulnerability Repair and Formal Invariant Verification in CI/CD Pipelines",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "userStories": [
     {
       "id": "US-001",
@@ -94,6 +94,22 @@
         "Microsoft Z3 SMT verifier formally proves invariants for SQLi parameterization, XSS DOM sanitization, and SSRF host allowlisting",
         "Comprehensive automated test suite (src/tests/run-all-tests.ts) covering DB integrity, AST analysis, Z3 SMT prover, and live REST API with 100% pass rate",
         "Mobile layout verified at 375px/390px viewports with zero horizontal overflow, compact header, and non-clipping modals"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-009",
+      "title": "AGENTS.md Scope Boundary Enforcement, Zero-Mock Data Ledger, Tree-sitter Pipeline & Live PR #1",
+      "description": "Establish strict AGENTS.md rules, eliminate all fabricated metrics, implement end-to-end 5-step pipeline on real vulnerable sample-app with Tree-sitter AST detection, parameterized patch generation, sandboxed node --test verification, and GitHub PR creation.",
+      "acceptanceCriteria": [
+        "AGENTS.md created defining hard scope boundaries (no live memory hot-patching, no auto-merge, no fake proofs, no silent mock data)",
+        "DATA_LEDGER.md created mapping every UI claim to its verified source and provenance tag",
+        "Real vulnerable Node/TypeScript sample app (sample-app/) with SQLite db.ts, vulnerable auth.ts, and test suite with failing adversarial injection test",
+        "TreeSitterDetector analyzes TypeScript AST to identify unescaped parameter reaching db.prepare()",
+        "PatchGenerator rewrites raw concatenation to parameterized query with Unified Diff",
+        "TestVerifier compiles and executes node --test against patched code, proving 4/4 tests pass and exploit is defused",
+        "GitHubPrCreator creates branch, commits patch, pushes to GitHub, and opens real PR #1 with test output attached",
+        "Dashboard updated to eliminate fabricated numbers (44.4ms, 1428 SAT, Merge PR #142) and display real pipeline metrics with provenance tags"
       ],
       "passes": true
     }

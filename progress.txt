@@ -63,3 +63,27 @@ Started: 2026-11-14
   * Polished mobile responsiveness down to 375px/390px viewports: 2-tier compact sticky header, non-clipping modals, responsive exploit preset grids, and tap targets.
   * Cleaned up all scratch files from dashboard directory; synchronized with mirror directory and remote git repository.
 - Outcome: 100% of user stories and acceptance criteria pass with 10/10 standard. Goal fully complete.
+
+[2026-11-17] US-009 (AGENTS.md Scope Boundary Enforcement, Zero-Mock Data Ledger, Tree-sitter Pipeline & Live PR #1) - COMPLETED
+- Addressed user feedback regarding mock data confusion and grounding AEGIS as an authentic CI/CD security tool for FYP defense.
+- Established root AGENTS.md defining strict non-negotiable boundaries:
+  * No live process memory hot-patching. Every fix opens a GitHub PR for human review.
+  * No fake formal proof claims (Z3, SMT, Q.E.D.) without an active solver run. UI explicitly labels formal proof as [not implemented].
+  * No fabricated numbers (e.g. 44.4ms, 1428 constraints). Every metric is measured and tagged [live], [seed demo], or [not implemented].
+  * Zero silent mock data: full transparency via DATA_LEDGER.md.
+- Built real sample-app/ with:
+  * SQLite database (sample-app/src/db.ts) seeded with test users.
+  * Vulnerable endpoint (sample-app/src/auth.ts:15) with string-concatenated SQL query.
+  * Test suite (sample-app/test/auth.test.ts) with functional tests and adversarial SQL injection test (' OR '1'='1'). Unpatched code causes adversarial test to fail assertion (extracts alice_admin).
+- Built TreeSitterDetector (src/analyzer/tree-sitter-detector.ts) using native tree-sitter & tree-sitter-typescript to traverse CST and locate taint sink at line 15:15.
+- Built PatchGenerator (src/patcher/patch-generator.ts) rewriting concatenation to parameterized query (.get(userId)) and producing real Unified Diff via diff library.
+- Built TestVerifier (src/verifier/test-verifier.ts) executing node --test against patched code. Verified 4/4 tests pass in 158.5ms with adversarial exploit defused.
+- Built GitHubPrCreator (src/github/pr-creator.ts) and executed master pipeline (src/cli/run-aegis.ts):
+  * Created branch aegis/fix-cwe89-sqli-mwkgsz0j
+  * Committed verified patch (commit af2598ef01de6b51c2fabfd48364552024cce142)
+  * Pushed to remote origin
+  * Opened real GitHub Pull Request #1: https://github.com/AreebIqbal6/AEGIS/pull/1
+  * Verified auto-merge is disabled (human review required).
+- Completely overhauled dashboard (dashboard/index.html & root index.html) to eliminate all fabricated metrics, display live pipeline results, link directly to PR #1, and embed the Data Ledger modal.
+- Synchronized to GitHub and GitHub Pages: https://areebiqbal6.github.io/AEGIS/
+- Outcome: US-009 passes: true. 100% acceptance criteria passed.
