@@ -10,6 +10,7 @@
     "db:seed": "node dist/db/seed.js",
     "db:inspect": "node dist/db/inspect.js",
     "analyze": "tsc && node dist/index.js",
+    "pipeline": "tsc && node dist/cli/run-aegis.js",
     "test": "tsc && node dist/tests/run-all-tests.js"
   },
   "keywords": [

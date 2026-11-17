@@ -48,7 +48,7 @@ export class GitHubPrCreator {
       execSync('npx tsc -p sample-app/tsconfig.json', { cwd: rootDir, stdio: 'pipe' });
 
       // 4. Stage and commit the fix
-      execSync(`git add "${targetFilePath}" "sample-app/dist"`, { cwd: rootDir, stdio: 'pipe' });
+      execSync(`git add "${targetFilePath}"`, { cwd: rootDir, stdio: 'pipe' });
       const commitMsg = `fix(security): parameterize SQL query in ${path.basename(targetFilePath)} [AEGIS-CWE89]`;
       execSync(`git commit -m "${commitMsg}"`, { cwd: rootDir, stdio: 'pipe' });
       const commitSha = execSync('git rev-parse HEAD', { cwd: rootDir, encoding: 'utf8' }).trim();
