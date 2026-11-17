@@ -11,7 +11,7 @@ export interface User {
  * VULNERABLE: Uses raw string concatenation instead of parameter binding.
  */
 export function findUserById(userId: string): User | undefined {
-  const query = "SELECT * FROM users WHERE id = '" + userId + "'";
-  const row = db.prepare(query).get() as User | undefined;
+  const query = "SELECT * FROM users WHERE id = ?";
+  const row = db.prepare(query).get(userId) as User | undefined;
   return row;
 }
