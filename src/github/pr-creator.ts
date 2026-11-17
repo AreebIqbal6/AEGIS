@@ -87,12 +87,22 @@ ${verification.testOutput.trim()}
 ---
 > ⚠️ **Notice (AGENTS.md Compliance):** AEGIS does **not** auto-merge pull requests. A human maintainer must review and approve this fix.`;
 
-      // 7. Open real Pull Request with GitHub CLI (gh)
+      // 7. Open real Pull Request with GitHub CLI (gh) using a temp body file for cross-platform multi-line preservation
       const prTitle = `fix(security): parameterize SQL query in ${path.basename(targetFilePath)} [CWE-89]`;
-      const prUrl = execSync(
-        `gh pr create --title "${prTitle}" --body "${prBody.replace(/"/g, '\\"')}" --base main --head ${branchName}`,
-        { cwd: rootDir, encoding: 'utf8' }
-      ).trim();
+      const tempBodyPath = path.resolve(rootDir, `.pr-body-${Date.now()}.md`);
+      fs.writeFileSync(tempBodyPath, prBody, 'utf8');
+
+      let prUrl = '';
+      try {
+        prUrl = execSync(
+          `gh pr create --title "${prTitle}" --body-file "${tempBodyPath}" --base main --head ${branchName}`,
+          { cwd: rootDir, encoding: 'utf8' }
+        ).trim();
+      } finally {
+        if (fs.existsSync(tempBodyPath)) {
+          fs.unlinkSync(tempBodyPath);
+        }
+      }
 
       const prNumberMatch = prUrl.match(/\/pull\/(\d+)/);
       const prNumber = prNumberMatch ? parseInt(prNumberMatch[1], 10) : 0;
