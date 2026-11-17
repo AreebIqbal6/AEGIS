@@ -24,7 +24,7 @@ export function createServer(port: number = 3456) {
   app.use(express.json());
 
   // Serve static dashboard
-  const dashboardPath = path.resolve(process.cwd(), 'dashboard');
+  const dashboardPath = path.resolve(__dirname, '../../dashboard');
   if (fs.existsSync(dashboardPath)) {
     app.use(express.static(dashboardPath));
   }
@@ -107,20 +107,32 @@ export function createServer(port: number = 3456) {
 
   // Execute Live Z3 SMT Theorem Verification
   app.post('/api/verify/z3', async (req: Request, res: Response) => {
-    const { vulnerabilityId, patchCode, isParameterized } = req.body;
+    const { vulnerabilityId, patchCode, isParameterized, cwe } = req.body;
 
     try {
-      const result = await verifier.verifySqlInjectionPatch(
-        patchCode || 'await db.query("SELECT * FROM users WHERE id = $1", [req.body.id])',
-        isParameterized !== undefined ? isParameterized : true
-      );
+      let result;
+      const targetCwe = cwe || (vulnerabilityId?.includes('CWE79') ? 'CWE-79' : vulnerabilityId?.includes('CWE918') ? 'CWE-918' : 'CWE-89');
+
+      if (targetCwe === 'CWE-79') {
+        result = await verifier.verifyXssPatch(isParameterized !== false);
+      } else if (targetCwe === 'CWE-918') {
+        result = await verifier.verifySsrfPatch(isParameterized !== false);
+      } else {
+        result = await verifier.verifySqlInjectionPatch(
+          patchCode || 'await db.query("SELECT * FROM users WHERE id = $1", [req.body.id])',
+          isParameterized !== undefined ? isParameterized : true
+        );
+      }
 
       // Record theorem proof in SQLite
       if (vulnerabilityId) {
+        const existingDetails = db.getVulnerabilityDetails(vulnerabilityId);
+        const resolvedPatchId = existingDetails?.patch?.id || `PATCH-${targetCwe.replace('-', '')}-001`;
+
         db.insertFormalProof({
           id: `PROOF-${Date.now()}`,
           vulnerability_id: vulnerabilityId,
-          patch_id: `PATCH-CWE89-001`,
+          patch_id: resolvedPatchId,
           first_order_formula: result.firstOrderFormula,
           smt_lib2_code: result.smtLib2Output,
           solver_engine: 'Microsoft Z3 SMT v4.12.2',

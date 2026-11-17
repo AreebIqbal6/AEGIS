@@ -84,7 +84,7 @@ export class AegisDatabase {
   private dbPath: string;
 
   constructor(customPath?: string) {
-    const dataDir = path.resolve(process.cwd(), 'data');
+    const dataDir = customPath ? path.dirname(customPath) : path.resolve(__dirname, '../../data');
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
     }
@@ -319,5 +319,9 @@ export class AegisDatabase {
       const count = (this.db.prepare(`SELECT COUNT(*) as count FROM ${name}`).get() as any).count;
       return { tableName: name, rowCount: count };
     });
+  }
+
+  public close(): void {
+    this.db.close();
   }
 }

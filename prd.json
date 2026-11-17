@@ -82,6 +82,20 @@
         "Explicit data provenance badges linking all frontend elements directly to their SQLite records"
       ],
       "passes": true
+    },
+    {
+      "id": "US-008",
+      "title": "Strict 10/10 Architecture: Polyglot AST Analysis, Centralized Types, Unified Test Suite & Mobile Polish",
+      "description": "Deliver 10/10 production architecture: eliminate scratch files, centralize all TypeScript interfaces in src/types/index.ts, extend AST taint analysis to XSS and SSRF, implement 36-point automated test suite, and achieve flawless mobile responsiveness.",
+      "acceptanceCriteria": [
+        "All temporary/scratch html and image files removed from dashboard directory",
+        "Centralized type definitions in src/types/index.ts covering database records, AST flows, Z3 proofs, and REST endpoints",
+        "Polyglot AST analyzer detects CWE-89 (SQLi), CWE-79 (XSS in TSX), and CWE-918 (SSRF in HTTP clients) with line/col precision",
+        "Microsoft Z3 SMT verifier formally proves invariants for SQLi parameterization, XSS DOM sanitization, and SSRF host allowlisting",
+        "Comprehensive automated test suite (src/tests/run-all-tests.ts) covering DB integrity, AST analysis, Z3 SMT prover, and live REST API with 100% pass rate",
+        "Mobile layout verified at 375px/390px viewports with zero horizontal overflow, compact header, and non-clipping modals"
+      ],
+      "passes": true
     }
   ]
 }

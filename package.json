@@ -10,7 +10,7 @@
     "db:seed": "node dist/db/seed.js",
     "db:inspect": "node dist/db/inspect.js",
     "analyze": "tsc && node dist/index.js",
-    "test": "node dist/index.js"
+    "test": "tsc && node dist/tests/run-all-tests.js"
   },
   "keywords": [
     "security",
